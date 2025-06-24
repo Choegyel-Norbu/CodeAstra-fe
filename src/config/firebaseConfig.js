@@ -3,13 +3,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAkawgad8jv11hhP8MaL8teaCzupoF4R5w",
-  authDomain: "codeastra-b1382.firebaseapp.com",
-  projectId: "codeastra-b1382",
-  storageBucket: "codeastra-b1382.firebasestorage.app",
-  messagingSenderId: "325832333428",
-  appId: "1:325832333428:web:582d2404398f37e2c7d921",
-  measurementId: "G-1YT93J13S3",
+  apiKey: "AIzaSyD5gZjV2mSIzqisUcLR7tFzT8o_WJG8Q4w",
+  authDomain: "chogyalportfolio.firebaseapp.com",
+  projectId: "chogyalportfolio",
+  storageBucket: "chogyalportfolio.appspot.com",
+  messagingSenderId: "663665324761",
+  appId: "1:663665324761:web:2db15579a74259e6c344c8",
+  measurementId: "G-EGNXH9FYHM",
 };
 
 const app = initializeApp(firebaseConfig);

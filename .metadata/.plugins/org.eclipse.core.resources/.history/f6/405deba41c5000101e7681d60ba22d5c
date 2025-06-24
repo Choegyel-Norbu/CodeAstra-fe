@@ -1,0 +1,8 @@
+spring.application.name=Chogyal's Portfolio Backend
+
+port=8080
+
+
+spring.datasource.url=jdbc:mysql://${MYSQLHOST:localhost}:${MYSQLPORT:3306}/${MYSQLDATABASE:portfolio}
+spring.datasource.username=${MYSQLUSER:root}
+spring.datasource.password=${MYSQLPASSWORD:ChogyalWp}
