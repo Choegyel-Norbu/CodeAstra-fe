@@ -14,6 +14,9 @@ import {
   SiTailwindcss,
   SiMysql,
 } from "react-icons/si";
+import brainstormingImg from "../assets/images/artificial-intelligence.png";
+import developmentImg from "../assets/images/development.png";
+
 import LoginModal from "../components/LoginModal";
 import "../assets/css/custom.css";
 import AOS from "aos";
@@ -267,13 +270,14 @@ const Landing = () => {
           >
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <span className="inline-block py-1 px-3 mb-4 text-xs font-semibold text-blue-600 bg-blue-100 rounded-full">
+                <span className="inline-block md:text-18 py-1 px-3 mb-4  text-[var(--color-primary)] text-xs font-semibold bg-blue-100 rounded-full">
                   MY PATH
                 </span>
-                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+
+                {/* <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
                   From Self-Taught to
                   <span className="text-blue-600">Problem Solver</span>
-                </h2>
+                </h2> */}
                 <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
               </div>
 
@@ -283,8 +287,13 @@ const Landing = () => {
 
                 {/* Journey items */}
                 <div className="space-y-12 md:space-y-16">
-                  <div className="relative md:flex items-center">
+                  <div className="relative md:flex items-center ">
                     {/* <div className="hidden md:block absolute md:left-1/2 transform md:-translate-x-1/2 -ml-3 w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow-lg"></div> */}
+                    <img
+                      src={brainstormingImg}
+                      alt="Brainstorming"
+                      className=" absolute bottom-[-20] left-0 w-70 h-70  opacity-40"
+                    />
                     <div className="md:w-5/12 md:pr-8 mb-4 md:mb-0">
                       <div className="md:text-right">
                         <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -306,6 +315,11 @@ const Landing = () => {
 
                   <div className="relative md:flex items-center md:flex-row-reverse">
                     {/* <div className="hidden md:block absolute md:left-1/2 transform md:-translate-x-1/2 -ml-3 w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow-lg"></div> */}
+                    <img
+                      src={developmentImg}
+                      alt="Brainstorming"
+                      className=" absolute bottom-[-20] right-[-20] w-70 h-70  opacity-40"
+                    />
                     <div className="md:w-5/12 md:pl-8 mb-4 md:mb-0">
                       <div>
                         <h3 className="text-xl font-bold text-gray-900 mb-2">
@@ -332,7 +346,7 @@ const Landing = () => {
         <section id="projects" className="pb-10 px-4 sm:px-8 bg-white">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
-              <span className="inline-block py-2 px-4 mb-4 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-full">
+              <span className="inline-block py-2 px-4 mb-4 md:mt-5 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-full">
                 CREATIVE WORK
               </span>
               <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
