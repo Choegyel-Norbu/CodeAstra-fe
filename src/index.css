@@ -267,30 +267,6 @@
     }
   }
 
-  .safe-top {
-    @apply pt-[env(safe-area-inset-top)];
-  }
-  .safe-bottom {
-    @apply pb-[env(safe-area-inset-bottom)];
-  }
-
-  @media print {
-    .no-print {
-      @apply !hidden;
-    }
-    .print-only {
-      @apply !block;
-    }
-    body {
-      @apply !bg-white !text-black;
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .animate-* {
-      @apply !duration-[0.01ms] !iteration-count-1;
-    }
-  }
   /* P3 color fallback */
   @supports (color: color(display-p3 1 1 1)) {
     .bg-primary-p3 {
@@ -299,23 +275,8 @@
   }
 }
 
-@layer components {
-  .skip-link {
-    @apply absolute -top-40 left-6 bg-primary text-white px-4 py-2 rounded-md z-50 transition-all;
-    &:focus {
-      @apply top-6;
-    }
-  }
-}
-
 /* ===== Base Styles ===== */
 @layer base {
-  html {
-    @apply scroll-smooth antialiased;
-  }
-  body {
-    @apply font-primary bg-background text-text leading-relaxed;
-  }
 }
 
 /* ===== Utility Classes ===== */
@@ -400,15 +361,6 @@
 
 /* ===== Accessibility ===== */
 /* Reduced Motion */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
 
 /* Focus Styles */
 .focus-visible {
