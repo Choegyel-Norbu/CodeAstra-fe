@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   FaGithub,
   FaLinkedin,
@@ -18,16 +18,27 @@ import LoginModal from "../components/LoginModal";
 import "../assets/css/custom.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform } from "framer-motion";
 import { useAuth } from "../services/AuthProvider";
+import { useSelector } from "react-redux";
+import Footer from "../components/Footer";
+import { useInView } from "react-intersection-observer";
 
 const Landing = () => {
   const { loggedIn, logout } = useAuth();
   const [loginShow, setLoginShow] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const isLoogedIn = useSelector((state) => state.auth.loggedIn);
+
+  const [ref, inView] = useInView({
+    triggerOnce: false, // Set true if you want it only once
+    threshold: 0.5,
+  });
   const toggleLogin = () => {
     setLoginShow(!loginShow);
   };
+
+  const [theme, setTheme] = useState("");
 
   useEffect(() => {
     AOS.init({
@@ -37,11 +48,35 @@ const Landing = () => {
   }, []);
 
   const cardVariants = {
-    offscreen: { opacity: 0, y: 100 },
-    onscreen: { opacity: 1, y: 0, transition: { duration: 0.8 } },
+    offscreen: { opacity: 0, x: 100 },
+    onscreen: { opacity: 1, x: 0, transition: { duration: 0.8 } },
+  };
+
+  const heroVariants = {
+    offscreen: { y: 100 },
+    onscreen: { y: -30, transition: { duration: 0.8 } },
+  };
+
+  const fadeInUp = {
+    offscreen: {
+      opacity: 0,
+      y: 40,
+    },
+    onscreen: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
   };
 
   const [dark, setDark] = useState(false);
+
+  const toggleTheme = () => {
+    setTheme("dark");
+  };
 
   useEffect(() => {
     const root = window.document.documentElement;
@@ -63,177 +98,238 @@ const Landing = () => {
 
   return (
     <>
-      <div className="font-sans text-gray-800 bg-gray-50">
+      <div className="bg-white md:bg-[#262626] text-black dark:text-white">
         {/* Navigation */}
-        <nav className="bg-white py-5 px-6 md:px-12">
-          <div className="max-w-6xl mx-auto flex justify-between items-center">
-            <div className="text-xl font-bold text-cyan-600">Chogyal</div>
-            <div
-              className={`${
-                menuOpen
-                  ? "flex flex-col absolute top-16 right-0 w-full bg-custom-background gap-4 px-6"
-                  : "hidden"
-              } md:flex gap-3`}
-            >
-              <span clssName="hover:text-cyan-600 transition nav-btn">
-                Let's talk
-              </span>
-
-              <div>
-                {!loggedIn ? (
-                  <></>
-                ) : (
-                  <span
-                    onClick={toggleLogin}
-                    className="hover:text-cyan-600 transition cursor-pointer nav-btn"
-                  >
-                    Login
-                  </span>
-                )}
-                {loggedIn ? (
-                  <></>
-                ) : (
-                  <span
-                    onClick={() => logout()}
-                    className="hover:text-cyan-600 transition cursor-pointer nav-btn"
-                  >
-                    LogOut
-                  </span>
-                )}
-              </div>
-            </div>
-            <button className="md:hidden" onClick={toggleMenu}>
-              <svg
-                className="w-6 h-6 relative"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
+        <div className="fixed w-full z-20 bg-white">
+          <nav className=" py-2 px-2 md:px-8 ">
+            <div className="max-w-6xl mx-auto flex justify-between items-center">
+              <div className="flex flex-row justify-center items-center">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG4T2eeT56DWkwb5nJE1avnleYrgQBQTKmQsiXkQavEnsEpakMNMALnFE&s"
+                  alt="Logo"
+                  className="w-16 h-16"
                 />
-              </svg>
-            </button>
-          </div>
-        </nav>
+                <div className="text-20 font-bold text-black-600 font-[cursive]">
+                  Chogyal
+                </div>
+              </div>
+              <div className="flex flex-row gap-12 hidden md:flex">
+                <div className="text-ms font-bold text-[#333333] cursor-pointer">
+                  Home
+                </div>
+                <div className="text-ms font-bold text-[#333333] cursor-pointer">
+                  Contact
+                </div>
+              </div>
+              <div
+                className={`${
+                  menuOpen
+                    ? "flex flex-col absolute top-16 right-0 w-full bg-custom-background gap-4 px-6"
+                    : "hidden"
+                } md:flex gap-3`}
+              >
+                <div>
+                  {!loggedIn && (
+                    <span
+                      onClick={toggleLogin}
+                      className="hover:text-cyan-600 transition cursor-pointer nav-btn"
+                    >
+                      Login
+                    </span>
+                  )}
+                  {loggedIn && (
+                    <span
+                      onClick={() => logout()}
+                      className="hover:text-cyan-600 transition cursor-pointer nav-btn"
+                    >
+                      LogOut
+                    </span>
+                  )}
+                </div>
+              </div>
+              <button className="md:hidden" onClick={toggleMenu}>
+                <svg
+                  className="w-6 h-6 relative"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+            </div>
+          </nav>
+        </div>
 
         {/* LoginModal */}
         {loginShow && <LoginModal onClose={closeLogin} />}
 
         {/* hero section  */}
-        <section className="h-[50vh] md:h-[75vh] bg-white flex flex-col items-center text-center px-2 pt-20 md:pt-30">
-          <div className="flex flex-col">
-            <h1 className="text-5xl sm:text-7xl md:text-8xl font-semibold text-custom-white mb-4">
-              Tech with Purpose
-            </h1>
-            <h1 className="text-4xl md:text-8xl font-semibold text-[#b3b3b3] mb-4 bg-primary">
-              My Developer Portfolio
-            </h1>
-          </div>
-
-          <div className="flex gap-4">
-            <motion.section
-              variants={cardVariants}
-              initial="offscreen"
-              whileInView="onscreen"
-              viewport={{ once: true }}
-            >
-              <button
-                className="bg-black text-white px-6 py-2 rounded-3xl shadow-md cursor-pointer hover:scale-105
-          transition-transform duration300 ease-in-out"
-              >
-                View My Work
-              </button>
-            </motion.section>
-
-            <motion.section
-              variants={cardVariants}
-              initial="offscreen"
-              whileInView="onscreen"
-              viewport={{ once: true }}
-            >
-              <button
-                className="border px-6 py-2 rounded-3xl cursor-pointer hover:scale-105
-        transition-transform duration300 ease-in-out"
-              >
-                Download Resume
-              </button>
-            </motion.section>
-          </div>
-        </section>
-
-        {/* About Section */}
-        <section
-          id="about"
-          className="py-16 px-4 sm:px-8 bg-white from-gray-50 to-white"
+        <motion.section
+          variants={fadeInUp}
+          initial="offscreen"
+          whileInView="onscreen"
+          viewport={{ once: true }}
         >
-          <div className="max-w-5xl mx-auto">
-            <div className="text-center mb-12">
-              <span className="inline-block py-1 px-3 mb-4 text-xs font-semibold text-blue-600 bg-blue-100 rounded-full">
-                MY PATH
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                From Self-Taught to{" "}
-                <span className="text-blue-600">Problem Solver</span>
-              </h2>
-              <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
+          <section className="h-full w-full pt-15 flex flex-col md:flex-row sm:py-10 items-center">
+            <div className=" relative w-[50%] h-full px-5 md:px-10 xl:px-10 rounded-l-30">
+              <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRziwypGm_6QKLI_YhK6XM_m5qSlEELNsFwxQ&s"
+                alt="Hero"
+                className="w-[100%] h-[100%] pt-10 object-cover hidden md:block rounded-3xl"
+              />
             </div>
 
-            <div className="relative">
-              {/* Timeline element */}
-              <div className="hidden md:block absolute left-1/2 transform-translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-blue-400 to-blue-200"></div>
+            <div
+              className="hidden xl:block absolute top-20 left-[4.1%] lg:left-[2.8%] w-40 h-40 bg-[#262626]"
+              style={{
+                clipPath: "path('M 0 100 L 0 0 L 100 0 A 100 100 0 0 0 0 100')",
+              }}
+            ></div>
 
-              {/* Journey items */}
-              <div className="space-y-12 md:space-y-16">
-                <div className="relative md:flex items-center">
-                  {/* <div className="hidden md:block absolute md:left-1/2 transform md:-translate-x-1/2 -ml-3 w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow-lg"></div> */}
-                  <div className="md:w-5/12 md:pr-8 mb-4 md:mb-0">
-                    <div className="md:text-right">
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">
-                        Self-Taught Beginnings
-                      </h3>
+            <div
+              className="hidden xl:block absolute top-20 left-[47%] w-40 h-40 bg-white"
+              style={{
+                clipPath: "path('M 0 100 L 0 0 L 100 0 A 100 100 0 0 0 0 100')",
+              }}
+            ></div>
+
+            <div className="w-full pt-20 sm:pt-20 px-3 sm:px-5 md:px-0 md:w-[50%] h-full rounded-t-30">
+              <div className="flex flex-col">
+                <h1 className="text-6xl text-[#cccccc] sm:text-5xl xl:text-6xl text-center font-semibold text-[#b3b3b3] mb-4 ">
+                  <span className="text-[#262626] md:text-white">
+                    My Developer
+                  </span>
+                  <br />
+                  Portfolio
+                </h1>
+              </div>
+              <p className="py-5 text-left text-14 --font-family-primary sm:px-10 text-black md:text-white">
+                I’m Chogyal, a self-taught tech enthusiast passionate about
+                building real-world solutions. I work with Java, React, React
+                Native, and Spring Boot to create meaningful apps, especially
+                for communities in Bhutan. I’m driven by design, UI/UX, and
+                clean architecture, and I’m continuously learning tools like
+                Redux, Firebase, and cloud deployment to grow as a well-rounded
+                developer.
+              </p>
+
+              <div className="flex gap-4 pl-10">
+                <motion.section
+                  variants={cardVariants}
+                  initial="offscreen"
+                  whileInView="onscreen"
+                  viewport={{ once: true }}
+                >
+                  <button
+                    className="bg-black text-white px-6 py-2 shadow-md cursor-pointer hover:scale-105
+          transition-transform duration300 ease-in-out"
+                  >
+                    View My Work
+                  </button>
+                </motion.section>
+
+                <motion.section
+                  variants={cardVariants}
+                  initial="offscreen"
+                  whileInView="onscreen"
+                  viewport={{ once: true }}
+                >
+                  <button
+                    className="border text-black md:text-white px-6 py-2  cursor-pointer hover:scale-105
+        transition-transform duration300 ease-in-out"
+                  >
+                    Download Resume
+                  </button>
+                </motion.section>
+              </div>
+            </div>
+          </section>
+        </motion.section>
+
+        {/* About Section */}
+        <motion.section
+          id="about"
+          className="py-16 px-4 sm:px-8 bg-white from-gray-50 to-white"
+          variants={fadeInUp}
+          initial="offscreen"
+          whileInView="onscreen"
+          viewport={{ once: false, amount: 0.2 }} // 30% visible before triggering
+        >
+          <section
+            id="about"
+            className=" px-4 sm:px-8 bg-white from-gray-50 to-white"
+          >
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-12">
+                <span className="inline-block py-1 px-3 mb-4 text-xs font-semibold text-blue-600 bg-blue-100 rounded-full">
+                  MY PATH
+                </span>
+                <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                  From Self-Taught to
+                  <span className="text-blue-600">Problem Solver</span>
+                </h2>
+                <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
+              </div>
+
+              <div className="relative">
+                {/* Timeline element */}
+                <div className="hidden md:block absolute left-1/2 transform-translate-x-1/2 h-full w-0.5 bg-gradient-to-b from-blue-400 to-blue-200"></div>
+
+                {/* Journey items */}
+                <div className="space-y-12 md:space-y-16">
+                  <div className="relative md:flex items-center">
+                    {/* <div className="hidden md:block absolute md:left-1/2 transform md:-translate-x-1/2 -ml-3 w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow-lg"></div> */}
+                    <div className="md:w-5/12 md:pr-8 mb-4 md:mb-0">
+                      <div className="md:text-right">
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                          Self-Taught Beginnings
+                        </h3>
+                      </div>
+                    </div>
+                    <div className="md:w-7/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                      <p className="text-gray-700 leading-relaxed">
+                        As a self-taught developer, I've always been fascinated
+                        by how technology can solve real-world problems. Without
+                        formal training, I've dedicated countless hours to
+                        mastering programming through online resources, building
+                        projects, and learning from the global developer
+                        community.
+                      </p>
                     </div>
                   </div>
-                  <div className="md:w-7/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <p className="text-gray-700 leading-relaxed">
-                      As a self-taught developer, I've always been fascinated by
-                      how technology can solve real-world problems. Without
-                      formal training, I've dedicated countless hours to
-                      mastering programming through online resources, building
-                      projects, and learning from the global developer
-                      community.
-                    </p>
-                  </div>
-                </div>
 
-                <div className="relative md:flex items-center md:flex-row-reverse">
-                  {/* <div className="hidden md:block absolute md:left-1/2 transform md:-translate-x-1/2 -ml-3 w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow-lg"></div> */}
-                  <div className="md:w-5/12 md:pl-8 mb-4 md:mb-0">
-                    <div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-2">
-                        Purpose-Driven Development
-                      </h3>
+                  <div className="relative md:flex items-center md:flex-row-reverse">
+                    {/* <div className="hidden md:block absolute md:left-1/2 transform md:-translate-x-1/2 -ml-3 w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow-lg"></div> */}
+                    <div className="md:w-5/12 md:pl-8 mb-4 md:mb-0">
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                          Purpose-Driven Development
+                        </h3>
+                      </div>
                     </div>
-                  </div>
-                  <div className="md:w-7/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                    <p className="text-gray-700 leading-relaxed">
-                      What drives me is not just coding, but understanding
-                      problems deeply and crafting solutions that are simple,
-                      effective, and culturally relevant to Bhutan's unique
-                      context.
-                    </p>
+                    <div className="md:w-7/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                      <p className="text-gray-700 leading-relaxed">
+                        What drives me is not just coding, but understanding
+                        problems deeply and crafting solutions that are simple,
+                        effective, and culturally relevant to Bhutan's unique
+                        context.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        </motion.section>
 
         {/* Projects Section */}
-        <section id="projects" className="py-20 px-4 sm:px-8 bg-white">
+        <section id="projects" className="pb-10 px-4 sm:px-8 bg-white">
           <div className="max-w-7xl mx-auto">
             <div className="text-center mb-16">
               <span className="inline-block py-2 px-4 mb-4 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-full">
@@ -258,7 +354,7 @@ const Landing = () => {
                       <FaMobile className="mx-auto text-7xl text-cyan-600 mb-6" />
                       <div className="inline-flex space-x-2">
                         <span className="px-3 py-1 text-xs font-medium bg-cyan-100 text-cyan-800 rounded-full">
-                          React Native
+                          React
                         </span>
                         <span className="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
                           Node.js
@@ -395,64 +491,6 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Skills Section */}
-        <section id="skills" className="py-16 px-6 md:px-12 bg-white">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-12 text-center">Tech Stack</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <FaReact className="text-4xl text-cyan-600 mb-2" />
-                <span>React Native</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <SiSpringboot className="text-4xl text-green-600 mb-2" />
-                <span>Spring Boot</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <SiFirebase className="text-4xl text-yellow-500 mb-2" />
-                <span>Firebase</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <SiMysql className="text-4xl text-blue-600 mb-2" />
-                <span>MySQL</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <FaJava className="text-4xl text-red-600 mb-2" />
-                <span>Java</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <SiTailwindcss className="text-4xl text-cyan-400 mb-2" />
-                <span>Tailwind CSS</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <FaDatabase className="text-4xl text-gray-600 mb-2" />
-                <span>REST APIs</span>
-              </div>
-              <div className="flex flex-col items-center p-4 bg-gray-50 rounded-lg">
-                <svg className="w-10 h-10 mb-2" viewBox="0 0 128 128">
-                  <path
-                    fill="#61DAFB"
-                    d="M64.004 25.602c-7.4 0-14.195 2.5-19.598 6.7-1.2 1-2.8 1-4-.2-1-1.2-1-2.8.2-4 6.4-5.3 14.5-8.1 23.4-8.1 7.4 0 14.195 2.5 19.598 6.7 1.2 1 1.4 2.8.2 4-1 1.2-2.8 1.4-4 .2-5.3-4.2-12-6.7-19.4-6.7zM90.004 42.102c1.2 0 2.4-.5 3.2-1.4 1.2-1.2 1.2-3 0-4.2-5.7-5.7-13.5-8.9-22.2-8.9-8.7 0-16.5 3.2-22.2 8.9-1.2 1.2-1.2 3 0 4.2 1.2 1.2 3 1.2 4.2 0 4.9-4.9 11.7-7.7 18-7.7 6.3 0 13.1 2.8 18 7.7.8.9 2 1.4 3.2 1.4z"
-                  ></path>
-                  <path
-                    fill="#61DAFB"
-                    d="M103.404 55.902c1.2 0 2.4-.5 3.2-1.4 1.2-1.2 1.2-3 0-4.2-7.3-7.3-17.5-11.4-28.6-11.4-11.1 0-21.3 4.1-28.6 11.4-1.2 1.2-1.2 3 0 4.2 1.2 1.2 3 1.2 4.2 0 6.5-6.5 15.6-10.2 24.4-10.2 8.8 0 17.9 3.7 24.4 10.2.8.9 2 1.4 3.2 1.4z"
-                  ></path>
-                  <path
-                    fill="#61DAFB"
-                    d="M92.104 69.702c1.2 0 2.4-.5 3.2-1.4 1.2-1.2 1.2-3 0-4.2-4.1-4.1-9.8-6.4-15.9-6.4-6.1 0-11.8 2.3-15.9 6.4-1.2 1.2-1.2 3 0 4.2 1.2 1.2 3 1.2 4.2 0 3.1-3.1 7.5-4.9 11.7-4.9 4.2 0 8.6 1.8 11.7 4.9.8.9 2 1.4 3.2 1.4z"
-                  ></path>
-                  <path
-                    fill="#61DAFB"
-                    d="M64.004 81.002c3.9 0 7-3.1 7-7s-3.1-7-7-7-7 3.1-7 7 3.1 7 7 7z"
-                  ></path>
-                </svg>
-                <span>Full Stack</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Testimonial Section */}
         <section className="py-16 px-6 md:px-12 bg-cyan-600 text-white">
           <div className="max-w-4xl mx-auto text-center">
@@ -463,6 +501,161 @@ const Landing = () => {
             </blockquote>
             <div className="font-medium">
               — Local Agricultural Cooperative, Bhutan
+            </div>
+          </div>
+        </section>
+
+        {/* Skills Section */}
+        <section id="skills" className="py-16 px-6 md:px-12 bg-white">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-3xl font-bold mb-12 text-center">Tech Stack</h2>
+            <div className="hidden lg:block relative h-[700px] w-fit m-auto py-10 perspective-[1000px] flex items-center justify-center">
+              <motion.div
+                ref={ref}
+                initial={{
+                  rotate: 25,
+                  x: 0,
+                }}
+                animate={{
+                  rotate: inView ? 0 : 0,
+                  x: inView ? -450 : 0,
+                }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4"
+              >
+                {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg float-left transform rotate-40 transition"> */}
+                <FaReact className="text-4xl text-cyan-600 mb-2" />
+                <span>React</span>
+              </motion.div>
+              {/* </div> */}
+
+              <motion.div
+                ref={ref}
+                initial={{
+                  rotate: 25,
+                  x: 0,
+                }}
+                animate={{
+                  rotate: inView ? 0 : 0,
+                  x: inView ? -300 : 0,
+                }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+              >
+                <SiSpringboot className="text-4xl text-green-600 mb-2" />
+                <span>Spring Boot</span>
+              </motion.div>
+
+              <motion.div
+                ref={ref}
+                initial={{
+                  rotate: 25,
+                  x: 0,
+                }}
+                animate={{
+                  rotate: inView ? 0 : 0,
+                  x: inView ? -150 : 0, // translates to left
+                }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+              >
+                {/* <div className="absolute top-10 flex w-[10rem] h-[15rem] flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-30 transition"> */}
+                <SiFirebase className="text-4xl text-yellow-500 mb-2" />
+                <span>Firebase</span>
+                {/* </div> */}
+              </motion.div>
+
+              <motion.div
+                ref={ref}
+                initial={{
+                  rotate: 0,
+                  x: 0,
+                }}
+                animate={{
+                  rotate: inView ? 0 : 0,
+                  x: inView ? 0 : 0, // translates to left
+                }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+              >
+                {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform transition"> */}
+                <SiMysql className="text-4xl text-blue-600 mb-2" />
+                <span>MySQL</span>
+                {/* </div> */}
+              </motion.div>
+              <motion.div
+                ref={ref}
+                initial={{
+                  rotate: -25,
+                  x: 0,
+                }}
+                animate={{
+                  rotate: inView ? 0 : 0,
+                  x: inView ? 150 : 0, // translates to left
+                }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+              >
+                {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-20 transition"> */}
+                <FaJava className="text-4xl text-red-600 mb-2" />
+                <span>Java</span>
+                {/* </div> */}
+              </motion.div>
+
+              <motion.div
+                ref={ref}
+                initial={{
+                  rotate: -25,
+                  x: 0,
+                }}
+                animate={{
+                  rotate: inView ? 0 : 0,
+                  x: inView ? 300 : 0, // translates to left
+                }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+              >
+                {/* <div className="absolute top-10 flex w-[10rem] h-[15rem] flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-15 transition"> */}
+                <SiTailwindcss className="text-4xl text-cyan-400 mb-2" />
+                <span>Tailwind CSS</span>
+                {/* </div> */}
+              </motion.div>
+
+              <motion.div
+                ref={ref}
+                initial={{
+                  rotate: -25,
+                  x: 0,
+                }}
+                animate={{
+                  rotate: inView ? 0 : 0,
+                  x: inView ? -600 : 0,
+                }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+              >
+                {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-10 transition"> */}
+                <FaDatabase className="text-4xl text-gray-600 mb-2" />
+                <span>REST APIs</span>
+                {/* </div> */}
+              </motion.div>
+              <motion.div
+                ref={ref}
+                initial={{
+                  rotate: 25,
+                  x: 0,
+                }}
+                animate={{
+                  rotate: inView ? 0 : 0,
+                  x: inView ? 450 : 0,
+                }}
+                transition={{ duration: 1, ease: "easeOut" }}
+                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4"
+              >
+                {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg float-left transform rotate-40 transition"> */}
+                <FaReact className="text-4xl text-cyan-600 mb-2" />
+                <span>React Native</span>
+              </motion.div>
             </div>
           </div>
         </section>
@@ -565,35 +758,7 @@ const Landing = () => {
         </section>
 
         {/* Footer */}
-        <footer className="bg-gray-800 text-white py-8 px-6 md:px-12">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col md:flex-row justify-between items-center">
-              <div className="mb-4 md:mb-0">
-                <div className="text-xl font-bold text-cyan-400">Chogyal</div>
-                <div className="text-gray-400 mt-1">
-                  Self-taught tech enthusiast & developer
-                </div>
-              </div>
-              <div className="flex space-x-6">
-                <a href="#about" className="hover:text-cyan-400 transition">
-                  About
-                </a>
-                <a href="#projects" className="hover:text-cyan-400 transition">
-                  Projects
-                </a>
-                <a href="#skills" className="hover:text-cyan-400 transition">
-                  Skills
-                </a>
-                <a href="#contact" className="hover:text-cyan-400 transition">
-                  Contact
-                </a>
-              </div>
-            </div>
-            <div className="border-t border-gray-700 mt-6 pt-6 text-center text-gray-400">
-              <p>© {new Date().getFullYear()} Chogyal. All rights reserved.</p>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </>
   );

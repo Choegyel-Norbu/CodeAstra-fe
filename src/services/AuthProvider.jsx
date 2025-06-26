@@ -82,14 +82,15 @@ export const AuthProvider = ({ children }) => {
         email: "",
         userId: null,
       });
-      localStorage.removeItem("token");
-      localStorage.removeItem("userId");
-      localStorage.removeItem("email");
-      localStorage.removeItem("role");
-      localStorage.removeItem("userName");
-      localStorage.removeItem("pictureURL");
-      localStorage.removeItem("registerFlag");
-      localStorage.removeItem("clientDetailSet");
+      localStorage.clear();
+      // localStorage.removeItem("token");
+      // localStorage.removeItem("userId");
+      // localStorage.removeItem("email");
+      // localStorage.removeItem("role");
+      // localStorage.removeItem("userName");
+      // localStorage.removeItem("pictureURL");
+      // localStorage.removeItem("registerFlag");
+      // localStorage.removeItem("clientDetailSet");
     } catch (error) {
       console.error("Failed to clear auth data", error);
     }

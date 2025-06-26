@@ -153,7 +153,7 @@ const LoginModal = ({ onClose }) => {
         )}
 
         {/* Continue with Google */}
-        <GoogleSignInButton />
+        <GoogleSignInButton onClose={onClose} onLoginSuccess={login} />
 
         {/* Divider */}
         <div className="flex items-center my-4 text-gray-400 text-sm">
