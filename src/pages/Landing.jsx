@@ -180,7 +180,7 @@ const Landing = () => {
           viewport={{ once: true }}
         >
           <section className="h-full w-full pt-15 flex flex-col md:flex-row sm:py-10 items-center">
-            <div className=" relative w-[50%] h-full px-5 md:px-10 xl:px-10 rounded-l-30">
+            <div className=" relative w-[50%] h-full px-5 md:px-10 rounded-l-30">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRziwypGm_6QKLI_YhK6XM_m5qSlEELNsFwxQ&s"
                 alt="Hero"
@@ -189,14 +189,14 @@ const Landing = () => {
             </div>
 
             <div
-              className="hidden xl:block absolute top-20 left-[4.1%] lg:left-[2.8%] w-40 h-40 bg-[#262626]"
+              className="hidden xl:block absolute top-20 xl:left-[2.7%] w-40 h-40 bg-[#262626]"
               style={{
                 clipPath: "path('M 0 100 L 0 0 L 100 0 A 100 100 0 0 0 0 100')",
               }}
             ></div>
 
             <div
-              className="hidden xl:block absolute top-20 left-[47%] w-40 h-40 bg-white"
+              className="hidden xl:block absolute top-20 left-[47.2%] w-40 h-40 bg-white"
               style={{
                 clipPath: "path('M 0 100 L 0 0 L 100 0 A 100 100 0 0 0 0 100')",
               }}
@@ -288,7 +288,6 @@ const Landing = () => {
                 {/* Journey items */}
                 <div className="space-y-12 md:space-y-16">
                   <div className="relative md:flex items-center ">
-                    {/* <div className="hidden md:block absolute md:left-1/2 transform md:-translate-x-1/2 -ml-3 w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow-lg"></div> */}
                     <img
                       src={brainstormingImg}
                       alt="Brainstorming"
@@ -314,7 +313,6 @@ const Landing = () => {
                   </div>
 
                   <div className="relative md:flex items-center md:flex-row-reverse">
-                    {/* <div className="hidden md:block absolute md:left-1/2 transform md:-translate-x-1/2 -ml-3 w-6 h-6 rounded-full bg-blue-500 border-4 border-white shadow-lg"></div> */}
                     <img
                       src={developmentImg}
                       alt="Brainstorming"
