@@ -416,7 +416,7 @@ const Landing = () => {
         {/* Projects Section */}
         <section id="projects" className="mb-5 px-4 sm:px-8 bg-white">
           <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16 mt-10">
+            <div className="text-center sm:mb-10 md:mb-20 mt-10">
               <h2 className="text-4xl md:text-5xl font-bold text-subheading mb-4">
                 Impactful
                 <span className="text-primary">Digital Courses</span>
@@ -427,7 +427,7 @@ const Landing = () => {
             </div>
 
             <div className="">
-              <div className="w-full flex hidden md:flex md:flex-row">
+              <div className="w-full flex  md:flex-row">
                 <div className="relative w-[60%] py-10 pl-10">
                   {/* cartification card */}
                   <div
@@ -491,7 +491,7 @@ const Landing = () => {
                   </div>
                 </div>
                 <div className="w-[40%] h-[20rem]">
-                  <div className="text-gray-800">
+                  <div className="hidden md:block text-gray-800">
                     <h2 className="text-2xl font-semibold mb-4">
                       My Certifications
                     </h2>
@@ -545,7 +545,7 @@ const Landing = () => {
                 transition: { duration: 0.2, ease: "easeIn" },
               }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              class="fixed inset-0 flex items-center bg-[#f2f2f2] justify-center z-50"
+              class="fixed inset-0 flex items-center justify-center z-50"
             >
               <div class="relative bg-white rounded-xl shadow-xl w-[90%] max-w-2xl p-4 md:p-6">
                 <div class="flex justify-center items-center">
