@@ -14,11 +14,11 @@ import {
   SiTailwindcss,
   SiMysql,
 } from "react-icons/si";
-import brainstormingImg from "../assets/images/artificial-intelligence.png";
-import developmentImg from "../assets/images/development.png";
-import java from "../assets/images/java.png";
-import react from "../assets/images/react.png";
-import ic3 from "../assets/images/ic3.png";
+import brainstormingImg from "../../public/images/artificial-intelligence.png";
+import developmentImg from "../../public/images/development.png";
+import java from "../../public/images/java.png";
+import react from "../../public/images/react.png";
+import ic3 from "../../public/images/ic3.png";
 
 import LoginModal from "../components/LoginModal";
 import "../assets/css/custom.css";
@@ -41,6 +41,7 @@ const Landing = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const isLoogedIn = useSelector((state) => state.auth.loggedIn);
   const [certModalOpen, setCertModalOpen] = useState(false);
+  const [image, setImage] = useState("");
 
   const [ref, inView] = useInView({
     triggerOnce: false, // Set true if you want it only once
@@ -110,6 +111,12 @@ const Landing = () => {
   };
 
   const [dark, setDark] = useState(false);
+
+  const handleImageSelection = (path) => {
+    setImage(path);
+    setCertModalOpen(true);
+    console.log("Image path - " + path);
+  };
 
   const toggleTheme = () => {
     setTheme("dark");
@@ -433,6 +440,9 @@ const Landing = () => {
                   <div
                     className="absolute top-10 left-10 z-1 md:w-[200px] lg:w-[400px] h-[200px] border border-gray-300 rounded-xl -skew-y-10 shadow-sm
                     transition-all duration-500 ease-in-out hover:-translate-y-10 bg-white cursor-pointer"
+                    onClick={() =>
+                      handleImageSelection("../../public/images/java.png")
+                    }
                     style={{
                       WebkitMaskImage:
                         "linear-gradient(to right, black 90%, transparent 80%)",
@@ -441,7 +451,7 @@ const Landing = () => {
                     }}
                   >
                     <p className="w-full h-[3rem] px-[0.5rem] py-[0.5rem]">
-                      card
+                      Java
                     </p>
                     <img
                       src={java}
@@ -452,6 +462,9 @@ const Landing = () => {
                   <div
                     className="absolute top-20 left-25 z-2 md:w-[200px] lg:w-[400px] h-[200px] border border-gray-300 rounded-xl -skew-y-10 shadow-sm
                     transition-all duration-500 ease-in-out hover:-translate-y-10 bg-white cursor-pointer"
+                    onClick={() =>
+                      handleImageSelection("../../public/images/react.png")
+                    }
                     style={{
                       WebkitMaskImage:
                         "linear-gradient(to right, black 90%, transparent 80%)",
@@ -460,7 +473,7 @@ const Landing = () => {
                     }}
                   >
                     <p className="w-full h-[3rem] px-[0.5rem] py-[0.5rem]">
-                      card
+                      React
                     </p>
                     <img
                       src={java}
@@ -472,7 +485,9 @@ const Landing = () => {
                   <div
                     className="absolute top-30 left-40 z-3 md:w-[200px] lg:w-[400px] h-[200px] border border-gray-300 rounded-xl -skew-y-10 shadow-sm
                      transition-all duration-500 ease-in-out hover:-translate-y-10 bg-white hover:z-4 cursor-pointer"
-                    onClick={() => setCertModalOpen(true)}
+                    onClick={() =>
+                      handleImageSelection("../../public/images/ic3.png")
+                    }
                     style={{
                       WebkitMaskImage:
                         "linear-gradient(to right, black 90%, transparent 100%)",
@@ -547,10 +562,10 @@ const Landing = () => {
               transition={{ duration: 0.5, ease: "easeOut" }}
               class="fixed inset-0 flex items-center justify-center z-50"
             >
-              <div class="relative bg-white rounded-xl shadow-xl w-[90%] max-w-2xl p-4 md:p-6">
+              <div class="relative bg-white rounded-xl shadow-xl w-[90%] md:w-[75%] lg:w-[55%] p-4 md:p-6">
                 <div class="flex justify-center items-center">
                   <img
-                    src={ic3}
+                    src={image}
                     alt="Placeholder"
                     class="rounded-lg max-w-full h-auto"
                   />
