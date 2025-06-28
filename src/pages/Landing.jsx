@@ -143,20 +143,25 @@ const Landing = () => {
   }, [dark]);
 
   const toggleMenu = () => {
-    setMenuOpen(!menuOpen);
+    setMenuOpen((prev) => !prev);
   };
 
   const closeLogin = () => {
     setLoginShow(false);
   };
-
+  const menuButtonRef = useRef(null);
   const sideBarRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (certiRef.current && !certiRef.current.contains(event.target)) {
         setCertModalOpen(false);
       }
-      if (sideBarRef.current && !sideBarRef.current.contains(event.target)) {
+      if (
+        sideBarRef.current &&
+        !sideBarRef.current.contains(event.target) &&
+        menuButtonRef.current &&
+        !menuButtonRef.current.contains(event.target)
+      ) {
         setMenuOpen(false);
       }
     };
@@ -234,7 +239,11 @@ const Landing = () => {
                   )}
                 </div>
               </div>
-              <button className="md:hidden" onClick={toggleMenu}>
+              <button
+                ref={menuButtonRef}
+                className="md:hidden menu-toggle-button"
+                onClick={toggleMenu}
+              >
                 {menuOpen ? (
                   <svg
                     className="w-6 h-6"
@@ -268,7 +277,7 @@ const Landing = () => {
             </div>
           </nav>
 
-          <motion.section
+          <motion.div
             ref={sideBarRef}
             variants={MenuSlideIn}
             initial="offscreen"
@@ -320,7 +329,7 @@ const Landing = () => {
                 )}
               </a>
             </div>
-          </motion.section>
+          </motion.div>
         </div>
 
         {/* LoginModal */}

@@ -63,7 +63,7 @@ function GetInTouch() {
           <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
             Get in Touch
           </h2>
-          <p class="  text-14 text-gray-700">
+          <p class=" px-4 text-14 text-gray-700">
             Have a project in mind or want to collaborate? Drop me a message
             below.
           </p>
