@@ -59,11 +59,11 @@ function GetInTouch() {
   return (
     <section class="py-16 sm:px-6 lg:px-8 ">
       <div class="max-w-4xl mx-auto">
-        <div class="text-center mb-8">
+        <div class="text-center mb-4">
           <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
             Get in Touch
           </h2>
-          <p class="mt-4 text-16 text-gray-600">
+          <p class="  text-14 text-gray-700">
             Have a project in mind or want to collaborate? Drop me a message
             below.
           </p>
@@ -210,7 +210,7 @@ function GetInTouch() {
             </div>
             <div class="mt-4 sm:mt-0">
               <a
-                href="mailto:contact@example.com"
+                href="mailto:choegyell@gmail.com"
                 class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200"
               >
                 Open Email

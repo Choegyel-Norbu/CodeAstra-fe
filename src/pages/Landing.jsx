@@ -333,7 +333,7 @@ const Landing = () => {
           whileInView="onscreen"
           viewport={{ once: true }}
         >
-          <section className="h-full w-full pt-15 flex flex-col md:flex-row sm:py-10 items-center">
+          <section className="h-full w-full pt-20 flex flex-col md:flex-row sm:py-10 items-center">
             <div className=" relative w-[50%] h-full px-5 md:px-10 rounded-l-30">
               <img
                 src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRziwypGm_6QKLI_YhK6XM_m5qSlEELNsFwxQ&s"
@@ -396,7 +396,7 @@ const Landing = () => {
         {/* About Section */}
         <motion.section
           id="about"
-          className="py-16 px-4 sm:px-8 bg-white from-gray-50 to-white"
+          className="py-14 px-4 sm:px-8 bg-white from-gray-50 to-white"
           variants={fadeInUp}
           initial="offscreen"
           whileInView="onscreen"
@@ -404,7 +404,7 @@ const Landing = () => {
         >
           <section
             id="about"
-            className=" px-4 sm:px-8 bg-white from-gray-50 to-white"
+            className=" sm:px-8 bg-white from-gray-50 to-white"
           >
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
@@ -435,7 +435,7 @@ const Landing = () => {
                       </div>
                     </div>
                     <div className="md:w-7/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                      <p className="text-gray-700 leading-relaxed">
+                      <p className="text-gray-700 text-14 leading-relaxed">
                         As a self-taught developer, I've always been fascinated
                         by how technology can solve real-world problems. Without
                         formal training, I've dedicated countless hours to
@@ -460,7 +460,7 @@ const Landing = () => {
                       </div>
                     </div>
                     <div className="md:w-7/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                      <p className="text-gray-700 leading-relaxed">
+                      <p className="text-gray-700 text-14 leading-relaxed">
                         What drives me is not just coding, but understanding
                         problems deeply and crafting solutions that are simple,
                         effective, and culturally relevant to Bhutan's unique
@@ -478,13 +478,11 @@ const Landing = () => {
         <section className="py-16 px-6 mt-10 md:px-12 bg-[#1a1a1a] text-white">
           <div className="max-w-4xl mx-auto text-center">
             <blockquote className="text-xl italic mb-6">
-              "Chogyal's ability to understand community needs and translate
-              them into functional apps is remarkable. His work has genuinely
-              helped local farmers increase their income."
+              " Through thoughtful design and deep community insight, I
+              delivered a platform that has empowered local farmers to connect
+              directly with buyers and grow their livelihoods sustainably. "
             </blockquote>
-            <div className="font-medium">
-              — Local Agricultural Cooperative, Bhutan
-            </div>
+            <div className="font-medium">— Chogyal, Bhutan</div>
           </div>
         </section>
 
@@ -496,9 +494,6 @@ const Landing = () => {
                 Impactful
                 <span className="text-primary">Digital Courses</span>
               </h2>
-              <p className="max-w-2xl mx-auto text-gray-500 text-lg">
-                Building technology that serves Bhutan's unique needs
-              </p>
             </div>
 
             <div className="">
@@ -573,7 +568,7 @@ const Landing = () => {
                     />
                   </div>
                 </div>
-                <div className="w-[40%] h-[20rem]">
+                <div className="w-[40%] h-[20rem] flex flex-col justify-center">
                   <div className="hidden md:block text-gray-800">
                     <h2 className="text-2xl font-semibold mb-4">
                       My Certifications
