@@ -16,12 +16,20 @@ import {
 } from "react-icons/si";
 import brainstormingImg from "../assets/images/artificial-intelligence.png";
 import developmentImg from "../assets/images/development.png";
+import java from "../assets/images/java.png";
+import react from "../assets/images/react.png";
+import ic3 from "../assets/images/ic3.png";
 
 import LoginModal from "../components/LoginModal";
 import "../assets/css/custom.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { motion, useScroll, useTransform } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
 import { useAuth } from "../services/AuthProvider";
 import { useSelector } from "react-redux";
 import Footer from "../components/Footer";
@@ -32,10 +40,11 @@ const Landing = () => {
   const [loginShow, setLoginShow] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const isLoogedIn = useSelector((state) => state.auth.loggedIn);
+  const [certModalOpen, setCertModalOpen] = useState(false);
 
   const [ref, inView] = useInView({
     triggerOnce: false, // Set true if you want it only once
-    threshold: 0.5,
+    threshold: 0.1,
   });
   const toggleLogin = () => {
     setLoginShow(!loginShow);
@@ -75,6 +84,31 @@ const Landing = () => {
     },
   };
 
+  const MenuSlideIn = {
+    offscreen: {
+      opacity: 0,
+      x: -300, // Start off-screen to the left
+    },
+    onscreen: {
+      opacity: 1,
+      x: 0, // Slide in to normal position
+      transition: {
+        type: "spring",
+        stiffness: 100,
+        damping: 20,
+        duration: 0.5,
+      },
+    },
+    exit: {
+      opacity: 0,
+      x: -300, // Slide back out to the left
+      transition: {
+        ease: "easeIn",
+        duration: 0.3,
+      },
+    },
+  };
+
   const [dark, setDark] = useState(false);
 
   const toggleTheme = () => {
@@ -101,11 +135,11 @@ const Landing = () => {
 
   return (
     <>
-      <div className="bg-white md:bg-[#262626] text-black dark:text-white">
+      <div className="bg-white text-black dark:text-white">
         {/* Navigation */}
         <div className="fixed w-full z-20 bg-white">
-          <nav className=" py-2 px-2 md:px-8 ">
-            <div className="max-w-6xl mx-auto flex justify-between items-center">
+          <nav className="relative py-2 px-2 md:px-8 ">
+            <div className="mx-auto flex justify-between items-center">
               <div className="flex flex-row justify-center items-center">
                 <img
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG4T2eeT56DWkwb5nJE1avnleYrgQBQTKmQsiXkQavEnsEpakMNMALnFE&s"
@@ -117,20 +151,36 @@ const Landing = () => {
                 </div>
               </div>
               <div className="flex flex-row gap-12 hidden md:flex">
-                <div className="text-ms font-bold text-[#333333] cursor-pointer">
+                <div className="text-ms font-normal text-[#333333] cursor-pointer">
                   Home
                 </div>
-                <div className="text-ms font-bold text-[#333333] cursor-pointer">
+                <div className="relative group">
+                  <div className="text-ms font-normal text-[#333333] cursor-pointer">
+                    Projects
+                  </div>
+                  <div className="absolute botton-10 left-0 hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-1 min-w-[180px] z-50">
+                    <a href="#java" className="px-4 py-2 hover:bg-gray-100">
+                      Java Projects
+                    </a>
+                    <a href="#react" className="px-4 py-2 hover:bg-gray-100">
+                      React Projects
+                    </a>
+                    <a
+                      href="#fullstack"
+                      className="px-4 py-2 hover:bg-gray-100"
+                    >
+                      Fullstack Projects
+                    </a>
+                  </div>
+                </div>
+                <div className="text-ms font-normal text-[#333333] cursor-pointer">
                   Contact
                 </div>
+                <div className="text-ms font-normal text-[#333333] cursor-pointer">
+                  About
+                </div>
               </div>
-              <div
-                className={`${
-                  menuOpen
-                    ? "flex flex-col absolute top-16 right-0 w-full bg-custom-background gap-4 px-6"
-                    : "hidden"
-                } md:flex gap-3`}
-              >
+              <div className="hidden md:block  w-fit bg-custom-background gap-4 px-6">
                 <div>
                   {!loggedIn && (
                     <span
@@ -143,7 +193,7 @@ const Landing = () => {
                   {loggedIn && (
                     <span
                       onClick={() => logout()}
-                      className="hover:text-cyan-600 transition cursor-pointer nav-btn"
+                      className="text-primary transition cursor-pointer nav-btn"
                     >
                       LogOut
                     </span>
@@ -151,22 +201,51 @@ const Landing = () => {
                 </div>
               </div>
               <button className="md:hidden" onClick={toggleMenu}>
-                <svg
-                  className="w-6 h-6 relative"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 6h16M4 12h16M4 18h16"
-                  />
-                </svg>
+                {menuOpen ? (
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M6 18L18 6M6 6l12 12"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    className="w-6 h-6 relative"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M4 6h16M4 12h16M4 18h16"
+                    />
+                  </svg>
+                )}
               </button>
             </div>
           </nav>
+
+          <motion.section
+            variants={MenuSlideIn}
+            initial="offscreen"
+            animate={menuOpen ? "onscreen" : "exit"}
+            exit="exit"
+            className="fixed top-20 bg-gray-200 left-0  h-screen w-[70%] sm:w-[60%] md:w-[40%] md:hidden z-50 overflow-y-auto"
+          >
+            <div className="p-4">
+              <h2 className="text-white text-2xl font-bold">Menu</h2>
+              {/* Your menu items here */}
+            </div>
+          </motion.section>
         </div>
 
         {/* LoginModal */}
@@ -188,31 +267,15 @@ const Landing = () => {
               />
             </div>
 
-            <div
-              className="hidden xl:block absolute top-20 xl:left-[2.7%] w-40 h-40 bg-[#262626]"
-              style={{
-                clipPath: "path('M 0 100 L 0 0 L 100 0 A 100 100 0 0 0 0 100')",
-              }}
-            ></div>
-
-            <div
-              className="hidden xl:block absolute top-20 left-[47.2%] w-40 h-40 bg-white"
-              style={{
-                clipPath: "path('M 0 100 L 0 0 L 100 0 A 100 100 0 0 0 0 100')",
-              }}
-            ></div>
-
             <div className="w-full pt-20 sm:pt-20 px-3 sm:px-5 md:px-0 md:w-[50%] h-full rounded-t-30">
               <div className="flex flex-col">
                 <h1 className="text-6xl text-[#cccccc] sm:text-5xl xl:text-6xl text-center font-semibold text-[#b3b3b3] mb-4 ">
-                  <span className="text-[#262626] md:text-white">
-                    My Developer
-                  </span>
+                  <span className="text-[#262626]">My Developer</span>
                   <br />
                   Portfolio
                 </h1>
               </div>
-              <p className="py-5 text-left text-14 --font-family-primary sm:px-10 text-black md:text-white">
+              <p className="py-5 text-left text-14 --font-family-primary sm:px-10 text-black">
                 I’m Chogyal, a self-taught tech enthusiast passionate about
                 building real-world solutions. I work with Java, React, React
                 Native, and Spring Boot to create meaningful apps, especially
@@ -244,7 +307,7 @@ const Landing = () => {
                   viewport={{ once: true }}
                 >
                   <button
-                    className="border text-black md:text-white px-6 py-2  cursor-pointer hover:scale-105
+                    className="border text-heading px-6 py-2  cursor-pointer hover:scale-105
         transition-transform duration300 ease-in-out"
                   >
                     Download Resume
@@ -274,10 +337,6 @@ const Landing = () => {
                   MY PATH
                 </span>
 
-                {/* <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-                  From Self-Taught to
-                  <span className="text-blue-600">Problem Solver</span>
-                </h2> */}
                 <div className="w-20 h-1 bg-blue-500 mx-auto"></div>
               </div>
 
@@ -291,7 +350,7 @@ const Landing = () => {
                     <img
                       src={brainstormingImg}
                       alt="Brainstorming"
-                      className=" absolute bottom-[-20] left-0 w-70 h-70  opacity-40"
+                      className="hidden md:block absolute bottom-[-80] left-0 w-70 h-70  opacity-40"
                     />
                     <div className="md:w-5/12 md:pr-8 mb-4 md:mb-0">
                       <div className="md:text-right">
@@ -316,7 +375,7 @@ const Landing = () => {
                     <img
                       src={developmentImg}
                       alt="Brainstorming"
-                      className=" absolute bottom-[-20] right-[-20] w-70 h-70  opacity-40"
+                      className="hidden md:block absolute md:bottom-[-30] lg:bottom-[-90] right-[-20] w-70 h-70  opacity-40"
                     />
                     <div className="md:w-5/12 md:pl-8 mb-4 md:mb-0">
                       <div>
@@ -340,171 +399,8 @@ const Landing = () => {
           </section>
         </motion.section>
 
-        {/* Projects Section */}
-        <section id="projects" className="pb-10 px-4 sm:px-8 bg-white">
-          <div className="max-w-7xl mx-auto">
-            <div className="text-center mb-16">
-              <span className="inline-block py-2 px-4 mb-4 md:mt-5 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-full">
-                CREATIVE WORK
-              </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-                Impactful{" "}
-                <span className="text-indigo-600">Digital Solutions</span>
-              </h2>
-              <p className="max-w-2xl mx-auto text-gray-500 text-lg">
-                Building technology that serves Bhutan's unique needs
-              </p>
-            </div>
-
-            <div className="space-y-20">
-              {/* Project 1 - Farmers' Market App */}
-              <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-100 to-indigo-100 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-md"></div>
-                <div className="relative flex flex-col md:flex-row bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-gray-200 transition-all">
-                  <div className="md:w-1/2 p-10 bg-gradient-to-br from-cyan-50 to-indigo-50 flex items-center justify-center">
-                    <div className="text-center">
-                      <FaMobile className="mx-auto text-7xl text-cyan-600 mb-6" />
-                      <div className="inline-flex space-x-2">
-                        <span className="px-3 py-1 text-xs font-medium bg-cyan-100 text-cyan-800 rounded-full">
-                          React
-                        </span>
-                        <span className="px-3 py-1 text-xs font-medium bg-indigo-100 text-indigo-800 rounded-full">
-                          Node.js
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="md:w-1/2 p-10 flex flex-col justify-center">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                      Farmers' Market App
-                    </h3>
-                    <p className="text-gray-600 mb-6 leading-relaxed">
-                      Revolutionizing agricultural commerce in Bhutan by
-                      connecting farmers directly with consumers through a
-                      mobile platform that eliminates middlemen, increases
-                      transparency, and boosts farmer profits by an average of
-                      40%.
-                    </p>
-                    <div className="flex space-x-4">
-                      <a
-                        href="#"
-                        className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
-                      >
-                        Case Study
-                        <FaArrowRight className="ml-2" />
-                      </a>
-                      <a
-                        href="#"
-                        className="inline-flex items-center text-gray-500 hover:text-gray-700"
-                      >
-                        <FaGithub className="mr-2" />
-                        Source Code
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Project 2 - Cleaning Service Platform */}
-              <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-blue-100 to-purple-100 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-md"></div>
-                <div className="relative flex flex-col md:flex-row-reverse bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-gray-200 transition-all">
-                  <div className="md:w-1/2 p-10 bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center">
-                    <div className="text-center">
-                      <FaReact className="mx-auto text-7xl text-blue-600 mb-6" />
-                      <div className="inline-flex space-x-2">
-                        <span className="px-3 py-1 text-xs font-medium bg-blue-100 text-blue-800 rounded-full">
-                          React
-                        </span>
-                        <span className="px-3 py-1 text-xs font-medium bg-purple-100 text-purple-800 rounded-full">
-                          Firebase
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="md:w-1/2 p-10 flex flex-col justify-center">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                      Urban Cleaning Network
-                    </h3>
-                    <p className="text-gray-600 mb-6 leading-relaxed">
-                      A comprehensive service platform that professionalizes
-                      Bhutan's cleaning industry by connecting verified
-                      providers with clients, featuring automated scheduling,
-                      secure payments, and quality assurance systems.
-                    </p>
-                    <div className="flex space-x-4">
-                      <a
-                        href="#"
-                        className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
-                      >
-                        Case Study
-                        <FaArrowRight className="ml-2" />
-                      </a>
-                      <a
-                        href="#"
-                        className="inline-flex items-center text-gray-500 hover:text-gray-700"
-                      >
-                        <FaGithub className="mr-2" />
-                        Source Code
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Project 3 - Tourism Helper */}
-              <div className="relative group">
-                <div className="absolute -inset-4 bg-gradient-to-r from-green-100 to-teal-100 rounded-2xl opacity-0 group-hover:opacity-100 transition-all duration-300 blur-md"></div>
-                <div className="relative flex flex-col md:flex-row bg-white rounded-2xl overflow-hidden border border-gray-100 hover:border-gray-200 transition-all">
-                  <div className="md:w-1/2 p-10 bg-gradient-to-br from-green-50 to-teal-50 flex items-center justify-center">
-                    <div className="text-center">
-                      <SiFirebase className="mx-auto text-7xl text-green-600 mb-6" />
-                      <div className="inline-flex space-x-2">
-                        <span className="px-3 py-1 text-xs font-medium bg-green-100 text-green-800 rounded-full">
-                          Flutter
-                        </span>
-                        <span className="px-3 py-1 text-xs font-medium bg-teal-100 text-teal-800 rounded-full">
-                          Firebase
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="md:w-1/2 p-10 flex flex-col justify-center">
-                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
-                      Bhutan Travel Companion
-                    </h3>
-                    <p className="text-gray-600 mb-6 leading-relaxed">
-                      Supporting Bhutan's sustainable tourism initiative with a
-                      digital platform that helps local operators manage
-                      bookings, share cultural insights, and provide exceptional
-                      visitor experiences while maintaining our environmental
-                      commitments.
-                    </p>
-                    <div className="flex space-x-4">
-                      <a
-                        href="#"
-                        className="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium"
-                      >
-                        Case Study
-                        <FaArrowRight className="ml-2" />
-                      </a>
-                      <a
-                        href="#"
-                        className="inline-flex items-center text-gray-500 hover:text-gray-700"
-                      >
-                        <FaGithub className="mr-2" />
-                        Source Code
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
         {/* Testimonial Section */}
-        <section className="py-16 px-6 md:px-12 bg-cyan-600 text-white">
+        <section className="py-16 px-6 mt-10 md:px-12 bg-[#1a1a1a] text-white">
           <div className="max-w-4xl mx-auto text-center">
             <blockquote className="text-xl italic mb-6">
               "Chogyal's ability to understand community needs and translate
@@ -517,10 +413,207 @@ const Landing = () => {
           </div>
         </section>
 
+        {/* Projects Section */}
+        <section id="projects" className="mb-5 px-4 sm:px-8 bg-white">
+          <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-16 mt-10">
+              <h2 className="text-4xl md:text-5xl font-bold text-subheading mb-4">
+                Impactful
+                <span className="text-primary">Digital Courses</span>
+              </h2>
+              <p className="max-w-2xl mx-auto text-gray-500 text-lg">
+                Building technology that serves Bhutan's unique needs
+              </p>
+            </div>
+
+            <div className="">
+              <div className="w-full flex hidden md:flex md:flex-row">
+                <div className="relative w-[60%] py-10 pl-10">
+                  {/* cartification card */}
+                  <div
+                    className="absolute top-10 left-10 z-1 md:w-[200px] lg:w-[400px] h-[200px] border border-gray-300 rounded-xl -skew-y-10 shadow-sm
+                    transition-all duration-500 ease-in-out hover:-translate-y-10 bg-white cursor-pointer"
+                    style={{
+                      WebkitMaskImage:
+                        "linear-gradient(to right, black 90%, transparent 80%)",
+                      maskImage:
+                        "linear-gradient(to right, black 90%, transparent 80%)",
+                    }}
+                  >
+                    <p className="w-full h-[3rem] px-[0.5rem] py-[0.5rem]">
+                      card
+                    </p>
+                    <img
+                      src={java}
+                      alt="java"
+                      className="w-100 h-fit z-10 group-hover:opacity-100 transition-opacity duration-700"
+                    />
+                  </div>
+                  <div
+                    className="absolute top-20 left-25 z-2 md:w-[200px] lg:w-[400px] h-[200px] border border-gray-300 rounded-xl -skew-y-10 shadow-sm
+                    transition-all duration-500 ease-in-out hover:-translate-y-10 bg-white cursor-pointer"
+                    style={{
+                      WebkitMaskImage:
+                        "linear-gradient(to right, black 90%, transparent 80%)",
+                      maskImage:
+                        "linear-gradient(to right, black 90%, transparent 80%)",
+                    }}
+                  >
+                    <p className="w-full h-[3rem] px-[0.5rem] py-[0.5rem]">
+                      card
+                    </p>
+                    <img
+                      src={java}
+                      alt="java"
+                      className="w-100 h-fit z-10 group-hover:opacity-100 transition-opacity duration-700"
+                    />
+                  </div>
+
+                  <div
+                    className="absolute top-30 left-40 z-3 md:w-[200px] lg:w-[400px] h-[200px] border border-gray-300 rounded-xl -skew-y-10 shadow-sm
+                     transition-all duration-500 ease-in-out hover:-translate-y-10 bg-white hover:z-4 cursor-pointer"
+                    onClick={() => setCertModalOpen(true)}
+                    style={{
+                      WebkitMaskImage:
+                        "linear-gradient(to right, black 90%, transparent 100%)",
+                      maskImage:
+                        "linear-gradient(to right, black 90%, transparent 100%)",
+                    }}
+                  >
+                    <p className="w-full h-[3rem] px-[0.5rem] py-[0.5rem] text-bold">
+                      IC3
+                    </p>
+                    <img
+                      src={ic3}
+                      alt="java"
+                      className="w-100 h-fit z-10 group-hover:opacity-100 transition-opacity duration-700"
+                    />
+                  </div>
+                </div>
+                <div className="w-[40%] h-[20rem]">
+                  <div className="text-gray-800">
+                    <h2 className="text-2xl font-semibold mb-4">
+                      My Certifications
+                    </h2>
+                    <p>
+                      This section highlights a collection of certifications
+                      I’ve earned as part of my continuous learning journey.
+                      Each certificate represents a step forward in expanding my
+                      knowledge, refining my skills, and staying committed to
+                      personal and professional growth in the field of
+                      technology.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* <div className="relative mb-10 cursor-pointer group hover:text-primary">
+                <h2>Java Project</h2>
+                <img
+                  src={java}
+                  alt="java"
+                  className="hidden md:block absolute top-0 right-[30%] opacity-0 w-100 h-100 z-10 group-hover:opacity-100 transition-opacity duration-700"
+                />
+              </div>
+
+              <div className="relative cursor-pointer group hover:text-primary">
+                <h2>React Project</h2>
+                <img
+                  src={react}
+                  alt="java"
+                  className="hidden md:block absolute top-0 right-[30%] opacity-0 w-100 h-100 z-10 group-hover:opacity-100 transition-opacity duration-700"
+                />
+              </div> */}
+            </div>
+          </div>
+        </section>
+
+        {/* Certificate modal  */}
+        <AnimatePresence>
+          {certModalOpen && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                skewY: certModalOpen ? 0 : -10,
+                scale: certModalOpen ? 0.9 : 1,
+              }}
+              exit={{
+                opacity: 0,
+                y: 0,
+                transition: { duration: 0.2, ease: "easeIn" },
+              }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              class="fixed inset-0 flex items-center bg-[#f2f2f2] justify-center z-50"
+            >
+              <div class="relative bg-white rounded-xl shadow-xl w-[90%] max-w-2xl p-4 md:p-6">
+                <div class="flex justify-center items-center">
+                  <img
+                    src={ic3}
+                    alt="Placeholder"
+                    class="rounded-lg max-w-full h-auto"
+                  />
+                </div>
+                <button
+                  class="absolute -top-10 flex items-center -right-6 px-2 bg-gray-200 text-black rounded-full text-20 font-normal focus:outline-none cursor-pointer"
+                  onClick={() => setCertModalOpen(false)}
+                >
+                  &times;
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {/* Skills Section */}
         <section id="skills" className="py-16 px-6 md:px-12 bg-white">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-12 text-center">Tech Stack</h2>
+            <h2 className="text-3xl font-bold  text-center">Tech Stack</h2>
+            {/* Grid tried  */}
+
+            <div class="lg:hidden mt-5 grid grid-cols-3 sm:grid-cols-4 gap-x-4 gap-y-8 place-items-center p-4">
+              {/* <!-- Left tall block --> */}
+              <div class="flex flex-col items-center">
+                <SiMysql className="text-5xl text-blue-600 mb-2" />
+                {/* <p className="text-12">MySQL</p>   */}
+              </div>
+
+              <div class="flex flex-col items-center">
+                <FaJava className="text-4xl text-red-600 mb-2" />
+                <span className="text-14">Java</span>
+              </div>
+
+              <div class="flex flex-col items-center">
+                <SiTailwindcss className="text-4xl text-cyan-400 mb-2" />
+                <span className="text-14">Tailwind CSS</span>
+              </div>
+
+              <div class="flex flex-col items-center">
+                <SiFirebase className="text-4xl text-yellow-500 mb-2" />
+                <span className="text-14">Firebase</span>
+              </div>
+
+              <div class="flex flex-col items-center">
+                <FaDatabase className="text-4xl text-gray-600 mb-2" />
+                <span className="text-14">REST APIs</span>
+              </div>
+
+              <div class="flex flex-col items-center">
+                <SiSpringboot className="text-4xl text-green-600 mb-2" />
+                <span className="text-14">Spring Boot</span>
+              </div>
+
+              <div class="flex flex-col items-center">
+                <FaReact className="text-4xl text-cyan-600 mb-2" />
+                <span className="text-14">React</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <FaReact className="text-4xl text-cyan-600 mb-2" />
+                <span className="text-14">React Native</span>
+              </div>
+            </div>
+
             <div className="hidden lg:block relative h-[700px] w-fit m-auto py-10 perspective-[1000px] flex items-center justify-center">
               <motion.div
                 ref={ref}
