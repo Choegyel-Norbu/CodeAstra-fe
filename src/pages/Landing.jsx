@@ -9,6 +9,14 @@ import {
   FaMobile,
 } from "react-icons/fa";
 import {
+  FaHome,
+  FaInfoCircle,
+  FaPhone,
+  FaStar,
+  FaSignInAlt,
+  FaSignOutAlt,
+} from "react-icons/fa";
+import {
   SiFirebase,
   SiSpringboot,
   SiTailwindcss,
@@ -42,6 +50,7 @@ const Landing = () => {
   const isLoogedIn = useSelector((state) => state.auth.loggedIn);
   const [certModalOpen, setCertModalOpen] = useState(false);
   const [image, setImage] = useState("");
+  const certiRef = useRef(null);
 
   const [ref, inView] = useInView({
     triggerOnce: false, // Set true if you want it only once
@@ -139,6 +148,19 @@ const Landing = () => {
   const closeLogin = () => {
     setLoginShow(false);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (certiRef.current && !certiRef.current.contains(event.target)) {
+        setCertModalOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [certiRef]);
 
   return (
     <>
@@ -246,11 +268,51 @@ const Landing = () => {
             initial="offscreen"
             animate={menuOpen ? "onscreen" : "exit"}
             exit="exit"
-            className="fixed top-20 bg-gray-200 left-0  h-screen w-[70%] sm:w-[60%] md:w-[40%] md:hidden z-50 overflow-y-auto"
+            className="fixed top-18 bg-gray-100 left-0  h-screen w-[70%] sm:w-[60%] md:w-[40%] md:hidden z-50 overflow-y-auto shadow-lg"
           >
-            <div className="p-4">
-              <h2 className="text-white text-2xl font-bold">Menu</h2>
-              {/* Your menu items here */}
+            <nav className="border-b-1 border-[#cccccc] pb-5 py-5">
+              <div className=" flex flex-col gap-y-2">
+                <a
+                  href="#"
+                  className="flex items-center gap-3 px-4 py-2 hover:bg-gray-200 transition"
+                >
+                  <FaHome className="w-5 h-5" /> Home
+                </a>
+                <a
+                  href="#"
+                  className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
+                >
+                  <FaInfoCircle className="w-5 h-5" /> About
+                </a>
+                <a
+                  href="#"
+                  className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
+                >
+                  <FaPhone className="w-5 h-5" /> Contact
+                </a>
+                <a
+                  href="#"
+                  className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
+                >
+                  <FaStar className="w-5 h-5" /> Rate
+                </a>
+              </div>
+            </nav>
+            <div className="mt-auto">
+              <a
+                href="#"
+                className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
+              >
+                {loggedIn ? (
+                  <>
+                    <FaSignOutAlt className="w-5 h-5" /> Logout
+                  </>
+                ) : (
+                  <>
+                    <FaSignInAlt className="w-5 h-5" /> Login
+                  </>
+                )}
+              </a>
             </div>
           </motion.section>
         </div>
@@ -274,7 +336,7 @@ const Landing = () => {
               />
             </div>
 
-            <div className="w-full pt-20 sm:pt-20 px-3 sm:px-5 md:px-0 md:w-[50%] h-full rounded-t-30">
+            <div className="w-full pt-10 sm:pt-10 px-3 sm:px-1 md:px-0 md:w-[50%] h-full rounded-t-30">
               <div className="flex flex-col">
                 <h1 className="text-6xl text-[#cccccc] sm:text-5xl xl:text-6xl text-center font-semibold text-[#b3b3b3] mb-4 ">
                   <span className="text-[#262626]">My Developer</span>
@@ -562,7 +624,10 @@ const Landing = () => {
               transition={{ duration: 0.5, ease: "easeOut" }}
               class="fixed inset-0 flex items-center justify-center z-50"
             >
-              <div class="relative bg-white rounded-xl shadow-xl w-[90%] md:w-[75%] lg:w-[55%] p-4 md:p-6">
+              <div
+                ref={certiRef}
+                class="relative bg-white rounded-xl shadow-xl w-[90%] md:w-[75%] lg:w-[55%] p-4 md:p-6"
+              >
                 <div class="flex justify-center items-center">
                   <img
                     src={image}
