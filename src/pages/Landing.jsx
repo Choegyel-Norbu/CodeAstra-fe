@@ -42,6 +42,7 @@ import { useAuth } from "../services/AuthProvider";
 import { useSelector } from "react-redux";
 import Footer from "../components/Footer";
 import { useInView } from "react-intersection-observer";
+import GetInTouch from "../components/GetInTouch";
 
 const Landing = () => {
   const { loggedIn, logout } = useAuth();
@@ -149,10 +150,14 @@ const Landing = () => {
     setLoginShow(false);
   };
 
+  const sideBarRef = useRef(null);
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (certiRef.current && !certiRef.current.contains(event.target)) {
         setCertModalOpen(false);
+      }
+      if (sideBarRef.current && !sideBarRef.current.contains(event.target)) {
+        setMenuOpen(false);
       }
     };
 
@@ -264,6 +269,7 @@ const Landing = () => {
           </nav>
 
           <motion.section
+            ref={sideBarRef}
             variants={MenuSlideIn}
             initial="offscreen"
             animate={menuOpen ? "onscreen" : "exit"}
@@ -354,7 +360,7 @@ const Landing = () => {
                 developer.
               </p>
 
-              <div className="flex gap-4 pl-10">
+              <div className="flex justify-start gap-4 sm:pl-10">
                 <motion.section
                   variants={cardVariants}
                   initial="offscreen"
@@ -362,7 +368,7 @@ const Landing = () => {
                   viewport={{ once: true }}
                 >
                   <button
-                    className="bg-black text-white px-6 py-2 shadow-md cursor-pointer hover:scale-105
+                    className="border bg-black text-white px-6 py-2  cursor-pointer hover:scale-105
           transition-transform duration300 ease-in-out"
                   >
                     View My Work
@@ -845,102 +851,8 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* Contact Section */}
-        <section id="contact" className="py-16 px-6 md:px-12 bg-white">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold mb-12 text-center">
-              Get In Touch
-            </h2>
-            <div className="flex flex-col md:flex-row gap-12">
-              <div className="md:w-1/2">
-                <form className="space-y-6">
-                  <div>
-                    <label htmlFor="name" className="block mb-2 font-medium">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-600"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block mb-2 font-medium">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-600"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="message" className="block mb-2 font-medium">
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      rows="4"
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-cyan-600"
-                    ></textarea>
-                  </div>
-                  <button
-                    type="submit"
-                    className="bg-cyan-600 hover:bg-cyan-700 text-white px-6 py-3 rounded-lg font-medium transition w-full"
-                  >
-                    Send Message
-                  </button>
-                </form>
-              </div>
-              <div className="md:w-1/2">
-                <div className="bg-gray-50 p-8 rounded-lg h-full">
-                  <h3 className="text-xl font-bold mb-4">Direct Contact</h3>
-                  <p className="mb-6">
-                    Interested in collaborating or have a project in mind? Reach
-                    out directly:
-                  </p>
-                  <div className="space-y-4">
-                    <div className="flex items-center">
-                      <svg
-                        className="w-5 h-5 mr-3 text-cyan-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                        />
-                      </svg>
-                      <span>hello@chogyal.dev</span>
-                    </div>
-                    <div className="flex items-center">
-                      <FaGithub className="w-5 h-5 mr-3 text-cyan-600" />
-                      <a href="#" className="hover:underline">
-                        github.com/chogyal
-                      </a>
-                    </div>
-                    <div className="flex items-center">
-                      <FaLinkedin className="w-5 h-5 mr-3 text-cyan-600" />
-                      <a href="#" className="hover:underline">
-                        linkedin.com/in/chogyal
-                      </a>
-                    </div>
-                  </div>
-                  <div className="mt-8">
-                    <h4 className="font-medium mb-3">Based in Bhutan</h4>
-                    <p className="text-gray-600">
-                      Creating digital solutions tailored for Bhutanese
-                      communities and beyond.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Get in contact */}
+        <GetInTouch />
 
         {/* Footer */}
         <Footer />
