@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import api from "../services/Api.jsx";
+import Toast from "../components/Toast";
 
 function GetInTouch() {
   const [formData, setFormData] = useState({
@@ -29,16 +31,9 @@ function GetInTouch() {
     console.log("Form data " + formData.consent);
 
     try {
-      const response = await fetch("https://your-api-endpoint.com/contact", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      const response = await api.post("/getIntouch", formData);
 
       if (response.ok) {
-        setSubmitStatus("success");
         setFormData({
           name: "",
           email: "",
@@ -46,6 +41,7 @@ function GetInTouch() {
           message: "",
           consent: false,
         });
+        setSubmitStatus("success");
       } else {
         throw new Error("Submission failed");
       }
@@ -58,6 +54,17 @@ function GetInTouch() {
   };
   return (
     <section class="py-16 sm:px-6 lg:px-8 ">
+      {submitStatus && (
+        <Toast
+          type={"success"}
+          message={
+            submitStatus === "success"
+              ? "SUCCESS! Your information was submitted successfully."
+              : "ERROR! There was a problem submitting your information."
+          }
+          onClose={() => setSubmitStatus(null)}
+        />
+      )}
       <div class="max-w-4xl mx-auto">
         <div class="text-center mb-4">
           <h2 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">

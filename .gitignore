@@ -11,6 +11,10 @@ node_modules
 dist
 dist-ssr
 *.local
+# .gitignore (add this to the root of your repo)
+
+.metadata/
+
 
 # Editor directories and files
 .vscode/*

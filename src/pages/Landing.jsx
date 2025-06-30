@@ -43,6 +43,9 @@ import { useSelector } from "react-redux";
 import Footer from "../components/Footer";
 import { useInView } from "react-intersection-observer";
 import GetInTouch from "../components/GetInTouch";
+import HeroLG from "../components/hero/HeroLG";
+import HeroSM from "../components/hero/HeroSM";
+import RatingWidget from "../components/RatingWidget";
 
 const Landing = () => {
   const { loggedIn, logout } = useAuth();
@@ -52,6 +55,18 @@ const Landing = () => {
   const [certModalOpen, setCertModalOpen] = useState(false);
   const [image, setImage] = useState("");
   const certiRef = useRef(null);
+  const [rating, setRating] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const [ref, inView] = useInView({
     triggerOnce: false, // Set true if you want it only once
@@ -69,6 +84,35 @@ const Landing = () => {
       once: true, // only animate once
     });
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setRating(true);
+    }, 5 * 60 * 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    if (!dismissed) return;
+
+    const interval = setInterval(() => {
+      setRating(true);
+    }, 10 * 60 * 1000); // 10 minutes in milliseconds
+
+    return () => clearInterval(interval);
+  }, [dismissed]);
+
+  const handleDismiss = () => {
+    setRating(false);
+    setDismissed(true);
+  };
+
+  const handleSubmit = () => {
+    // Your submit logic here
+    setRating(false);
+    setDismissed(false); // Stop showing if submitted
+  };
 
   const cardVariants = {
     offscreen: { opacity: 0, x: 100 },
@@ -174,9 +218,9 @@ const Landing = () => {
 
   return (
     <>
-      <div className="bg-white text-black dark:text-white">
+      <div className=" relative bg-white text-black dark:text-white">
         {/* Navigation */}
-        <div className="fixed w-full z-20 bg-white">
+        <div className="fixed w-full z-20 bg-white md:bg-[#1a1a1a]">
           <nav className="relative py-2 px-2 md:px-8 ">
             <div className="mx-auto flex justify-between items-center">
               <div className="flex flex-row justify-center items-center">
@@ -185,16 +229,16 @@ const Landing = () => {
                   alt="Logo"
                   className="w-16 h-16"
                 />
-                <div className="text-20 font-bold text-black-600 font-[cursive]">
+                <div className="text-20 font-bold text-black-600 md:text-white font-[cursive]">
                   Chogyal
                 </div>
               </div>
               <div className="flex flex-row gap-12 hidden md:flex">
-                <div className="text-ms font-normal text-[#333333] cursor-pointer">
+                <div className="text-ms font-normal text-[#333333] md:text-white cursor-pointer">
                   Home
                 </div>
                 <div className="relative group">
-                  <div className="text-ms font-normal text-[#333333] cursor-pointer">
+                  <div className="text-ms font-normal text-[#333333] cursor-pointer md:text-white">
                     Projects
                   </div>
                   <div className="absolute botton-10 left-0 hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-1 min-w-[180px] z-50">
@@ -212,19 +256,19 @@ const Landing = () => {
                     </a>
                   </div>
                 </div>
-                <div className="text-ms font-normal text-[#333333] cursor-pointer">
+                <div className="text-ms font-normal text-[#333333] cursor-pointer md:text-white">
                   Contact
                 </div>
-                <div className="text-ms font-normal text-[#333333] cursor-pointer">
+                <div className="text-ms font-normal text-[#333333] cursor-pointer md:text-white">
                   About
                 </div>
               </div>
-              <div className="hidden md:block  w-fit bg-custom-background gap-4 px-6">
+              <div className="hidden md:block  w-fit gap-4 px-6">
                 <div>
                   {!loggedIn && (
                     <span
                       onClick={toggleLogin}
-                      className="hover:text-cyan-600 transition cursor-pointer nav-btn"
+                      className=" text-primary transition cursor-pointer nav-btn md:border-white"
                     >
                       Login
                     </span>
@@ -324,7 +368,25 @@ const Landing = () => {
                   </>
                 ) : (
                   <>
-                    <FaSignInAlt className="w-5 h-5" /> Login
+                    <FaSignInAlt className="w-5 h-5" />{" "}
+                    <span>
+                      {!loggedIn && (
+                        <span
+                          onClick={toggleLogin}
+                          className="hover:text-cyan-600 transition cursor-pointer"
+                        >
+                          Login
+                        </span>
+                      )}
+                      {loggedIn && (
+                        <span
+                          onClick={() => logout()}
+                          className="text-primary transition cursor-pointer"
+                        >
+                          LogOut
+                        </span>
+                      )}
+                    </span>
                   </>
                 )}
               </a>
@@ -336,71 +398,8 @@ const Landing = () => {
         {loginShow && <LoginModal onClose={closeLogin} />}
 
         {/* hero section  */}
-        <motion.section
-          variants={fadeInUp}
-          initial="offscreen"
-          whileInView="onscreen"
-          viewport={{ once: true }}
-        >
-          <section className="h-full w-full pt-20 flex flex-col md:flex-row sm:py-10 items-center">
-            <div className=" relative w-[50%] h-full px-5 md:px-10 rounded-l-30">
-              <img
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRziwypGm_6QKLI_YhK6XM_m5qSlEELNsFwxQ&s"
-                alt="Hero"
-                className="w-[100%] h-[100%] pt-10 object-cover hidden md:block rounded-3xl"
-              />
-            </div>
-
-            <div className="w-full pt-10 sm:pt-10 px-3 sm:px-1 md:px-0 md:w-[50%] h-full rounded-t-30">
-              <div className="flex flex-col">
-                <h1 className="text-6xl text-[#cccccc] sm:text-5xl xl:text-6xl text-center font-semibold text-[#b3b3b3] mb-4 ">
-                  <span className="text-[#262626]">My Developer</span>
-                  <br />
-                  Portfolio
-                </h1>
-              </div>
-              <p className="py-5 text-left text-14 --font-family-primary sm:px-10 text-black">
-                I’m Chogyal, a self-taught tech enthusiast passionate about
-                building real-world solutions. I work with Java, React, React
-                Native, and Spring Boot to create meaningful apps, especially
-                for communities in Bhutan. I’m driven by design, UI/UX, and
-                clean architecture, and I’m continuously learning tools like
-                Redux, Firebase, and cloud deployment to grow as a well-rounded
-                developer.
-              </p>
-
-              <div className="flex justify-start gap-4 sm:pl-10">
-                <motion.section
-                  variants={cardVariants}
-                  initial="offscreen"
-                  whileInView="onscreen"
-                  viewport={{ once: true }}
-                >
-                  <button
-                    className="border bg-black text-white px-6 py-2  cursor-pointer hover:scale-105
-          transition-transform duration300 ease-in-out"
-                  >
-                    View My Work
-                  </button>
-                </motion.section>
-
-                <motion.section
-                  variants={cardVariants}
-                  initial="offscreen"
-                  whileInView="onscreen"
-                  viewport={{ once: true }}
-                >
-                  <button
-                    className="border text-heading px-6 py-2  cursor-pointer hover:scale-105
-        transition-transform duration300 ease-in-out"
-                  >
-                    Download Resume
-                  </button>
-                </motion.section>
-              </div>
-            </div>
-          </section>
-        </motion.section>
+        {/* {isMobile ? <HeroSM /> : <HeroLG />} */}
+        <HeroLG />
 
         {/* About Section */}
         <motion.section
@@ -484,16 +483,35 @@ const Landing = () => {
         </motion.section>
 
         {/* Testimonial Section */}
-        <section className="py-16 px-6 mt-10 md:px-12 bg-[#1a1a1a] text-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <blockquote className="text-xl italic mb-6">
-              " Through thoughtful design and deep community insight, I
-              delivered a platform that has empowered local farmers to connect
-              directly with buyers and grow their livelihoods sustainably. "
-            </blockquote>
-            <div className="font-medium">— Chogyal, Bhutan</div>
-          </div>
-        </section>
+
+        <motion.div
+          initial="offscreen"
+          whileInView="onscreen"
+          viewport={{ once: false, amount: 0.1 }}
+          variants={{
+            offscreen: {
+              opacity: 0,
+            },
+            onscreen: {
+              opacity: 1,
+              transition: {
+                ease: "easeInOut",
+                duration: 0.6,
+              },
+            },
+          }}
+        >
+          <section className="py-16 px-6 mt-10 md:px-12 bg-[#1a1a1a] text-white">
+            <div className="max-w-4xl mx-auto text-center">
+              <blockquote className="text-xl italic mb-6">
+                " Through thoughtful design and deep community insight, I
+                delivered a platform that has empowered local farmers to connect
+                directly with buyers and grow their livelihoods sustainably. "
+              </blockquote>
+              <div className="font-medium">— Chogyal, Bhutan</div>
+            </div>
+          </section>
+        </motion.div>
 
         {/* Projects Section */}
         <section id="projects" className="mb-5 px-4 sm:px-8 bg-white">
@@ -582,7 +600,7 @@ const Landing = () => {
                     <h2 className="text-2xl font-semibold mb-4">
                       My Certifications
                     </h2>
-                    <p>
+                    <p className="text-14">
                       This section highlights a collection of certifications
                       I’ve earned as part of my continuous learning journey.
                       Each certificate represents a step forward in expanding my
@@ -657,201 +675,199 @@ const Landing = () => {
         </AnimatePresence>
 
         {/* Skills Section */}
-        <section id="skills" className="py-16 px-6 md:px-12 bg-white">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-3xl font-bold  text-center">Tech Stack</h2>
-            {/* Grid tried  */}
+        <section id="skills" className="pt-7 lg:pt-17 w-full mx-auto">
+          <h2 className="text-3xl font-bold  text-center">Tech Stack</h2>
+          {/* Grid tried  */}
 
-            <div class="lg:hidden mt-5 grid grid-cols-3 sm:grid-cols-4 gap-x-4 gap-y-8 place-items-center p-4">
-              {/* <!-- Left tall block --> */}
-              <div class="flex flex-col items-center">
-                <SiMysql className="text-5xl text-blue-600 mb-2" />
-                {/* <p className="text-12">MySQL</p>   */}
-              </div>
-
-              <div class="flex flex-col items-center">
-                <FaJava className="text-4xl text-red-600 mb-2" />
-                <span className="text-14">Java</span>
-              </div>
-
-              <div class="flex flex-col items-center">
-                <SiTailwindcss className="text-4xl text-cyan-400 mb-2" />
-                <span className="text-14">Tailwind CSS</span>
-              </div>
-
-              <div class="flex flex-col items-center">
-                <SiFirebase className="text-4xl text-yellow-500 mb-2" />
-                <span className="text-14">Firebase</span>
-              </div>
-
-              <div class="flex flex-col items-center">
-                <FaDatabase className="text-4xl text-gray-600 mb-2" />
-                <span className="text-14">REST APIs</span>
-              </div>
-
-              <div class="flex flex-col items-center">
-                <SiSpringboot className="text-4xl text-green-600 mb-2" />
-                <span className="text-14">Spring Boot</span>
-              </div>
-
-              <div class="flex flex-col items-center">
-                <FaReact className="text-4xl text-cyan-600 mb-2" />
-                <span className="text-14">React</span>
-              </div>
-              <div className="flex flex-col items-center">
-                <FaReact className="text-4xl text-cyan-600 mb-2" />
-                <span className="text-14">React Native</span>
-              </div>
+          <div class="lg:hidden mt-5 grid grid-cols-3 sm:grid-cols-4 gap-x-4 gap-y-8 place-items-center p-4">
+            {/* <!-- Left tall block --> */}
+            <div class="flex flex-col items-center">
+              <SiMysql className="text-5xl text-blue-600 mb-2" />
+              {/* <p className="text-12">MySQL</p>   */}
             </div>
 
-            <div className="hidden lg:block relative h-[700px] w-fit m-auto py-10 perspective-[1000px] flex items-center justify-center">
-              <motion.div
-                ref={ref}
-                initial={{
-                  rotate: 25,
-                  x: 0,
-                }}
-                animate={{
-                  rotate: inView ? 0 : 0,
-                  x: inView ? -450 : 0,
-                }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4"
-              >
-                {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg float-left transform rotate-40 transition"> */}
-                <FaReact className="text-4xl text-cyan-600 mb-2" />
-                <span>React</span>
-              </motion.div>
+            <div class="flex flex-col items-center">
+              <FaJava className="text-4xl text-red-600 mb-2" />
+              <span className="text-14">Java</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <SiTailwindcss className="text-4xl text-cyan-400 mb-2" />
+              <span className="text-14">Tailwind CSS</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <SiFirebase className="text-4xl text-yellow-500 mb-2" />
+              <span className="text-14">Firebase</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <FaDatabase className="text-4xl text-gray-600 mb-2" />
+              <span className="text-14">REST APIs</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <SiSpringboot className="text-4xl text-green-600 mb-2" />
+              <span className="text-14">Spring Boot</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <FaReact className="text-4xl text-cyan-600 mb-2" />
+              <span className="text-14">React</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <FaReact className="text-4xl text-cyan-600 mb-2" />
+              <span className="text-14">React Native</span>
+            </div>
+          </div>
+
+          <div className="hidden lg:block bg-blue-300 relative h-[10rem] w-fit m-auto py-10 perspective-[1000px] flex items-center justify-center">
+            <motion.div
+              ref={ref}
+              initial={{
+                rotate: 25,
+                x: 0,
+              }}
+              animate={{
+                rotate: inView ? 0 : 0,
+                x: inView ? -450 : 0,
+              }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4"
+            >
+              {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg float-left transform rotate-40 transition"> */}
+              <FaReact className="text-4xl text-cyan-600 mb-2" />
+              <span>React</span>
+            </motion.div>
+            {/* </div> */}
+
+            <motion.div
+              ref={ref}
+              initial={{
+                rotate: 25,
+                x: 0,
+              }}
+              animate={{
+                rotate: inView ? 0 : 0,
+                x: inView ? -300 : 0,
+              }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+            >
+              <SiSpringboot className="text-4xl text-green-600 mb-2" />
+              <span>Spring Boot</span>
+            </motion.div>
+
+            <motion.div
+              ref={ref}
+              initial={{
+                rotate: 25,
+                x: 0,
+              }}
+              animate={{
+                rotate: inView ? 0 : 0,
+                x: inView ? -150 : 0, // translates to left
+              }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+            >
+              {/* <div className="absolute top-10 flex w-[10rem] h-[15rem] flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-30 transition"> */}
+              <SiFirebase className="text-4xl text-yellow-500 mb-2" />
+              <span>Firebase</span>
               {/* </div> */}
+            </motion.div>
 
-              <motion.div
-                ref={ref}
-                initial={{
-                  rotate: 25,
-                  x: 0,
-                }}
-                animate={{
-                  rotate: inView ? 0 : 0,
-                  x: inView ? -300 : 0,
-                }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-              >
-                <SiSpringboot className="text-4xl text-green-600 mb-2" />
-                <span>Spring Boot</span>
-              </motion.div>
+            <motion.div
+              ref={ref}
+              initial={{
+                rotate: 0,
+                x: 0,
+              }}
+              animate={{
+                rotate: inView ? 0 : 0,
+                x: inView ? 0 : 0, // translates to left
+              }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+            >
+              {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform transition"> */}
+              <SiMysql className="text-4xl text-blue-600 mb-2" />
+              <span>MySQL</span>
+              {/* </div> */}
+            </motion.div>
+            <motion.div
+              ref={ref}
+              initial={{
+                rotate: -25,
+                x: 0,
+              }}
+              animate={{
+                rotate: inView ? 0 : 0,
+                x: inView ? 150 : 0, // translates to left
+              }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+            >
+              {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-20 transition"> */}
+              <FaJava className="text-4xl text-red-600 mb-2" />
+              <span>Java</span>
+              {/* </div> */}
+            </motion.div>
 
-              <motion.div
-                ref={ref}
-                initial={{
-                  rotate: 25,
-                  x: 0,
-                }}
-                animate={{
-                  rotate: inView ? 0 : 0,
-                  x: inView ? -150 : 0, // translates to left
-                }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-              >
-                {/* <div className="absolute top-10 flex w-[10rem] h-[15rem] flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-30 transition"> */}
-                <SiFirebase className="text-4xl text-yellow-500 mb-2" />
-                <span>Firebase</span>
-                {/* </div> */}
-              </motion.div>
+            <motion.div
+              ref={ref}
+              initial={{
+                rotate: -25,
+                x: 0,
+              }}
+              animate={{
+                rotate: inView ? 0 : 0,
+                x: inView ? 300 : 0, // translates to left
+              }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+            >
+              {/* <div className="absolute top-10 flex w-[10rem] h-[15rem] flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-15 transition"> */}
+              <SiTailwindcss className="text-4xl text-cyan-400 mb-2" />
+              <span>Tailwind CSS</span>
+              {/* </div> */}
+            </motion.div>
 
-              <motion.div
-                ref={ref}
-                initial={{
-                  rotate: 0,
-                  x: 0,
-                }}
-                animate={{
-                  rotate: inView ? 0 : 0,
-                  x: inView ? 0 : 0, // translates to left
-                }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-              >
-                {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform transition"> */}
-                <SiMysql className="text-4xl text-blue-600 mb-2" />
-                <span>MySQL</span>
-                {/* </div> */}
-              </motion.div>
-              <motion.div
-                ref={ref}
-                initial={{
-                  rotate: -25,
-                  x: 0,
-                }}
-                animate={{
-                  rotate: inView ? 0 : 0,
-                  x: inView ? 150 : 0, // translates to left
-                }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-              >
-                {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-20 transition"> */}
-                <FaJava className="text-4xl text-red-600 mb-2" />
-                <span>Java</span>
-                {/* </div> */}
-              </motion.div>
-
-              <motion.div
-                ref={ref}
-                initial={{
-                  rotate: -25,
-                  x: 0,
-                }}
-                animate={{
-                  rotate: inView ? 0 : 0,
-                  x: inView ? 300 : 0, // translates to left
-                }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-              >
-                {/* <div className="absolute top-10 flex w-[10rem] h-[15rem] flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-15 transition"> */}
-                <SiTailwindcss className="text-4xl text-cyan-400 mb-2" />
-                <span>Tailwind CSS</span>
-                {/* </div> */}
-              </motion.div>
-
-              <motion.div
-                ref={ref}
-                initial={{
-                  rotate: -25,
-                  x: 0,
-                }}
-                animate={{
-                  rotate: inView ? 0 : 0,
-                  x: inView ? -600 : 0,
-                }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-              >
-                {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-10 transition"> */}
-                <FaDatabase className="text-4xl text-gray-600 mb-2" />
-                <span>REST APIs</span>
-                {/* </div> */}
-              </motion.div>
-              <motion.div
-                ref={ref}
-                initial={{
-                  rotate: 25,
-                  x: 0,
-                }}
-                animate={{
-                  rotate: inView ? 0 : 0,
-                  x: inView ? 450 : 0,
-                }}
-                transition={{ duration: 1, ease: "easeOut" }}
-                className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4"
-              >
-                {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg float-left transform rotate-40 transition"> */}
-                <FaReact className="text-4xl text-cyan-600 mb-2" />
-                <span>React Native</span>
-              </motion.div>
-            </div>
+            <motion.div
+              ref={ref}
+              initial={{
+                rotate: -25,
+                x: 0,
+              }}
+              animate={{
+                rotate: inView ? 0 : 0,
+                x: inView ? -600 : 0,
+              }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
+            >
+              {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-10 transition"> */}
+              <FaDatabase className="text-4xl text-gray-600 mb-2" />
+              <span>REST APIs</span>
+              {/* </div> */}
+            </motion.div>
+            <motion.div
+              ref={ref}
+              initial={{
+                rotate: 25,
+                x: 0,
+              }}
+              animate={{
+                rotate: inView ? 0 : 0,
+                x: inView ? 450 : 0,
+              }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4"
+            >
+              {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg float-left transform rotate-40 transition"> */}
+              <FaReact className="text-4xl text-cyan-600 mb-2" />
+              <span>React Native</span>
+            </motion.div>
           </div>
         </section>
 
@@ -860,6 +876,19 @@ const Landing = () => {
 
         {/* Footer */}
         <Footer />
+        <AnimatePresence>
+          {rating && (
+            <motion.div
+              className="fixed bottom-0 z-20 w-full"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 20 }}
+              transition={{ type: "spring", stiffness: 100, damping: 10 }}
+            >
+              <RatingWidget onClose={handleDismiss} />
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </>
   );
