@@ -327,7 +327,7 @@ const Landing = () => {
             initial="offscreen"
             animate={menuOpen ? "onscreen" : "exit"}
             exit="exit"
-            className="fixed top-18 bg-gray-100 left-0  h-screen w-[70%] sm:w-[60%] md:w-[40%] md:hidden z-50 overflow-y-auto shadow-lg"
+            className="fixed top-18 bg-white left-0  h-screen w-[70%] sm:w-[60%] md:w-[40%] md:hidden z-50 overflow-y-auto shadow-lg"
           >
             <nav className="border-b-1 border-[#cccccc] pb-5 py-5">
               <div className=" flex flex-col gap-y-2">

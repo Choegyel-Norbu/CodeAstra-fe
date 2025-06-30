@@ -79,7 +79,7 @@ export default function HeroLG() {
         </div>
       </div> */}
 
-      <div className="container mx-auto pt-30 xl:pt-0 px-6 py-16 relative z-10">
+      <div className="container mx-auto pt-25 xl:pt-0 px-6 py-16 relative z-10">
         <motion.div
           className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center"
           variants={containerVariants}
@@ -154,8 +154,8 @@ export default function HeroLG() {
 
           {/* Hero image */}
           <motion.div className="relative" variants={imageVariants}>
-            <div className="absolute -top-10 -left-10 w-64 h-64 bg-cyan-400/20 rounded-full mix-blend-overlay filter blur-3xl animate-pulse" />
-            <div className="absolute -bottom-10 -right-10 w-64 h-64 bg-purple-400/20 rounded-full mix-blend-overlay filter blur-3xl animate-pulse delay-1000" />
+            <div className=" absolute -top-10 -left-10 w-64 h-64 bg-cyan-400/20 rounded-full mix-blend-overlay filter blur-3xl animate-pulse" />
+            <div className="hidden md:block absolute -bottom-10 -right-10 w-64 h-64 bg-purple-400/20 rounded-full mix-blend-overlay filter blur-3xl animate-pulse delay-1000" />
 
             <div className="relative bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
               <img
