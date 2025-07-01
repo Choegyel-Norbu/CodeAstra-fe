@@ -24,9 +24,9 @@ import {
 } from "react-icons/si";
 import brainstormingImg from "../../public/images/artificial-intelligence.png";
 import developmentImg from "../../public/images/development.png";
-import java from "../../public/images/java.png";
-import react from "../../public/images/react.png";
-import ic3 from "../../public/images/ic3.png";
+import java from "../assets/images/java.png";
+import react from "../assets/images/react.png";
+import ic3 from "../assets/images/ic3.png";
 
 import LoginModal from "../components/LoginModal";
 import "../assets/css/custom.css";
@@ -573,9 +573,7 @@ const Landing = () => {
                   <div
                     className="absolute top-10 left-10 z-1 md:w-[200px] lg:w-[400px] h-[200px] border border-gray-300 rounded-xl -skew-y-10 shadow-sm
                     transition-all duration-500 ease-in-out hover:-translate-y-10 bg-white cursor-pointer"
-                    onClick={() =>
-                      handleImageSelection("../../public/images/java.png")
-                    }
+                    onClick={() => handleImageSelection(java)}
                     style={{
                       WebkitMaskImage:
                         "linear-gradient(to right, black 90%, transparent 80%)",
@@ -595,9 +593,7 @@ const Landing = () => {
                   <div
                     className="absolute top-20 left-25 z-2 md:w-[200px] lg:w-[400px] h-[200px] border border-gray-300 rounded-xl -skew-y-10 shadow-sm
                     transition-all duration-500 ease-in-out hover:-translate-y-10 bg-white cursor-pointer"
-                    onClick={() =>
-                      handleImageSelection("../../public/images/react.png")
-                    }
+                    onClick={() => handleImageSelection(react)}
                     style={{
                       WebkitMaskImage:
                         "linear-gradient(to right, black 90%, transparent 80%)",
@@ -618,9 +614,7 @@ const Landing = () => {
                   <div
                     className="absolute top-30 left-40 z-3 md:w-[200px] lg:w-[400px] h-[200px] border border-gray-300 rounded-xl -skew-y-10 shadow-sm
                      transition-all duration-500 ease-in-out hover:-translate-y-10 bg-white hover:z-4 cursor-pointer"
-                    onClick={() =>
-                      handleImageSelection("../../public/images/ic3.png")
-                    }
+                    onClick={() => handleImageSelection(ic3)}
                     style={{
                       WebkitMaskImage:
                         "linear-gradient(to right, black 90%, transparent 100%)",
