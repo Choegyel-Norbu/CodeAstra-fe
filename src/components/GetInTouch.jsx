@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import api from "../services/Api.jsx";
 import Toast from "../components/Toast";
 
-function GetInTouch() {
+const GetInTouch = React.forwardRef((props, ref) => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,7 +33,7 @@ function GetInTouch() {
     try {
       const response = await api.post("/getIntouch", formData);
 
-      if (response.ok) {
+      if (response.status === 200) {
         setFormData({
           name: "",
           email: "",
@@ -53,10 +53,10 @@ function GetInTouch() {
     }
   };
   return (
-    <section class="py-16 sm:px-6 lg:px-8 ">
+    <section ref={ref} class="py-16 sm:px-6 lg:px-8 ">
       {submitStatus && (
         <Toast
-          type={"success"}
+          type={submitStatus}
           message={
             submitStatus === "success"
               ? "SUCCESS! Your information was submitted successfully."
@@ -237,6 +237,6 @@ function GetInTouch() {
       </div>
     </section>
   );
-}
+});
 
 export default GetInTouch;

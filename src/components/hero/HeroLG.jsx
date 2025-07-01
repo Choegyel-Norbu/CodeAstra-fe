@@ -1,11 +1,28 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React, { useCallback } from "react";
+import { motion, useAnimation } from "framer-motion";
 import { useRef } from "react";
 import { useInView } from "framer-motion";
+import qoute2 from "../../assets/images/qoute2.png";
 
-export default function HeroLG() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.5 });
+const HeroLG = React.forwardRef(({ onScroll }, forwardedRef) => {
+  const localRef = useRef(null);
+  const isInView = useInView(localRef, { once: true, amount: 0.5 });
+
+  // Combine the forwarded ref with the local ref
+  const setRefs = useCallback(
+    (node) => {
+      // Set the local ref
+      localRef.current = node;
+
+      // Set the forwarded ref
+      if (typeof forwardedRef === "function") {
+        forwardedRef(node);
+      } else if (forwardedRef) {
+        forwardedRef.current = node;
+      }
+    },
+    [forwardedRef]
+  );
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -31,6 +48,29 @@ export default function HeroLG() {
     },
   };
 
+  const imageItemVariants = {
+    hidden: { y: 0, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        type: "spring",
+        stiffness: 10,
+        damping: 15,
+        duration: 0.5,
+        ease: "easeOut",
+      },
+    },
+    exit: {
+      opacity: 0,
+      scale: 0.9,
+      transition: {
+        duration: 0.7,
+        ease: "easeInOut",
+      },
+    },
+  };
+
   const imageVariants = {
     hidden: { scale: 0.9, opacity: 0 },
     visible: {
@@ -47,7 +87,7 @@ export default function HeroLG() {
 
   return (
     <section
-      ref={ref}
+      ref={setRefs}
       className="relative min-h-screen flex items-center justify-center bg-[#1a1a1a] overflow-hidden"
     >
       {/* Animated background elements */}
@@ -123,8 +163,11 @@ export default function HeroLG() {
                 Get Started
               </button> */}
               {/* <div className="absolute -bottom-10 -left-10 w-64 h-64 bg-cyan-400/20 rounded-full mix-blend-overlay filter blur-3xl animate-pulse" /> */}
-              <button className="px-8 py-3.5 cursor-pointer hover:bg-white/20 backdrop-blur-md  font-small text-white border border-white transition-all duration-300">
-                Learn More
+              <button
+                onClick={() => onScroll()}
+                className="px-8 py-3.5 cursor-pointer hover:bg-white/20 backdrop-blur-md  font-small text-white border border-white transition-all duration-300"
+              >
+                Contact Me
               </button>
             </motion.div>
 
@@ -154,6 +197,54 @@ export default function HeroLG() {
 
           {/* Hero image */}
           <motion.div className="relative" variants={imageVariants}>
+            <motion.div
+              variants={imageItemVariants}
+              className="hidden md:block w-[15rem] md:w-[20rem] z-1 lg:z-0 -left-5 -top-5 h-auto object-cover absolute lg:-top-25 -left-10 rounded-md"
+            >
+              <div className="flex flex-row">
+                <span className="bg-primary w-[5px] h-[110px] text-primary">
+                  o
+                </span>
+                <img
+                  src="../../../public/images/qoute1.png"
+                  alt="Hero"
+                  // className="hidden md:block w-[15rem] md:w-[20rem] z-1 lg:z-0 -left-5 -top-5 h-auto object-cover absolute lg:-top-25 -left-10 rounded-md"
+                />
+              </div>
+            </motion.div>
+
+            <motion.div
+              variants={imageItemVariants}
+              className="hidden md:block absolute w-[15rem] md:w-[20rem] z-2 -left-[0.5rem] opacity-[0.6] bottom-10 h-auto object-cover  -left-10 rounded-md"
+            >
+              <div className="flex flex-row">
+                <span className="bg-primary w-[5px] h-[120px] text-primary">
+                  o
+                </span>
+                <img
+                  // src="../../../public/images/qoute2.png"
+                  src={qoute2}
+                  alt="Hero"
+                  // className="hidden md:block absolute w-[15rem] md:w-[20rem] z-2 -left-[0.5rem] opacity-[0.6] bottom-10 h-auto object-cover  -left-10 rounded-md"
+                />
+              </div>
+            </motion.div>
+            <motion.div
+              variants={imageItemVariants}
+              className="hidden lg:block absolute w-[15rem] md:w-[20rem] z-2 left-40 xl:left-70 -bottom-30 h-auto object-cover  -left-10 rounded-md"
+            >
+              <div className="flex flex-row">
+                <span className="bg-primary w-[5px] h-[120px] text-primary">
+                  o
+                </span>
+                <img
+                  src="../../../public/images/qoute1.png"
+                  alt="Hero"
+                  // className="hidden lg:block absolute w-[15rem] md:w-[20rem] z-2 left-40 xl:left-70 -bottom-30 h-auto object-cover  -left-10 rounded-md"
+                />
+              </div>
+            </motion.div>
+
             <div className=" absolute -top-10 -left-10 w-64 h-64 bg-cyan-400/20 rounded-full mix-blend-overlay filter blur-3xl animate-pulse" />
             <div className="hidden md:block absolute -bottom-10 -right-10 w-64 h-64 bg-purple-400/20 rounded-full mix-blend-overlay filter blur-3xl animate-pulse delay-1000" />
 
@@ -163,6 +254,7 @@ export default function HeroLG() {
                 alt="Hero"
                 className="w-full h-auto object-cover"
               />
+
               {/* <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
                 <div className="flex items-center gap-3">
                   <div className="w-12 h-12 bg-blue-500 rounded-lg flex items-center justify-center">
@@ -195,4 +287,6 @@ export default function HeroLG() {
       </div>
     </section>
   );
-}
+});
+
+export default HeroLG;

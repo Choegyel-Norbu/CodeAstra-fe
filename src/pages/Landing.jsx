@@ -57,6 +57,11 @@ const Landing = () => {
   const certiRef = useRef(null);
   const [rating, setRating] = useState(false);
   const [dismissed, setDismissed] = useState(false);
+  const contactMeRef = useRef(null);
+  const homeRef = useRef(null);
+  const [hasRated, setHasRated] = useState(
+    localStorage.getItem("hasRated") === "true"
+  );
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   useEffect(() => {
@@ -88,7 +93,7 @@ const Landing = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setRating(true);
-    }, 5 * 60 * 1000);
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -224,44 +229,71 @@ const Landing = () => {
           <nav className="relative py-2 px-2 md:px-8 ">
             <div className="mx-auto flex justify-between items-center">
               <div className="flex flex-row justify-center items-center">
-                <img
+                {/* <img
                   src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQG4T2eeT56DWkwb5nJE1avnleYrgQBQTKmQsiXkQavEnsEpakMNMALnFE&s"
                   alt="Logo"
                   className="w-16 h-16"
-                />
+                /> */}
                 <div className="text-20 font-bold text-black-600 md:text-white font-[cursive]">
                   Chogyal
                 </div>
               </div>
               <div className="flex flex-row gap-12 hidden md:flex">
-                <div className="text-ms font-normal text-[#333333] md:text-white cursor-pointer">
+                <a
+                  href="/"
+                  className="text-ms font-light text-14 text-[#333333] md:text-white cursor-pointer hover:opacity-80 transition-opacity"
+                >
                   Home
-                </div>
+                </a>
+
                 <div className="relative group">
-                  <div className="text-ms font-normal text-[#333333] cursor-pointer md:text-white">
+                  <a
+                    href="#"
+                    className="text-ms font-small text-14 text-[#333333] cursor-pointer md:text-white hover:opacity-80 transition-opacity"
+                  >
                     Projects
-                  </div>
-                  <div className="absolute botton-10 left-0 hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-1 min-w-[180px] z-50">
-                    <a href="#java" className="px-4 py-2 hover:bg-gray-100">
+                  </a>
+                  <div className="absolute bottom-10 left-0 hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-1 min-w-[180px] z-50">
+                    <a
+                      href="#java"
+                      className="px-4 text-14 py-2 hover:bg-gray-100 text-[#333333]"
+                    >
                       Java Projects
                     </a>
-                    <a href="#react" className="px-4 py-2 hover:bg-gray-100">
+                    <a
+                      href="#react"
+                      className="px-4 text-14 py-2 hover:bg-gray-100 text-[#333333]"
+                    >
                       React Projects
                     </a>
                     <a
                       href="#fullstack"
-                      className="px-4 py-2 hover:bg-gray-100"
+                      className="px-4 py-2 text-14 hover:bg-gray-100 text-[#333333]"
                     >
                       Fullstack Projects
                     </a>
                   </div>
                 </div>
-                <div className="text-ms font-normal text-[#333333] cursor-pointer md:text-white">
+
+                <a
+                  href="#contact"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    contactMeRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                  }}
+                  className="text-ms font-small text-14 text-[#333333] cursor-pointer md:text-white hover:opacity-80 transition-opacity"
+                >
                   Contact
-                </div>
-                <div className="text-ms font-normal text-[#333333] cursor-pointer md:text-white">
+                </a>
+
+                <a
+                  href="#about"
+                  className="text-ms font-small text-14 text-[#333333] cursor-pointer md:text-white hover:opacity-80 transition-opacity"
+                >
                   About
-                </div>
+                </a>
               </div>
               <div className="hidden md:block  w-fit gap-4 px-6">
                 <div>
@@ -333,6 +365,12 @@ const Landing = () => {
               <div className=" flex flex-col gap-y-2">
                 <a
                   href="#"
+                  onClick={() => {
+                    homeRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                    setMenuOpen(false);
+                  }}
                   className="flex items-center gap-3 px-4 py-2 hover:bg-gray-200 transition"
                 >
                   <FaHome className="w-5 h-5" /> Home
@@ -346,14 +384,14 @@ const Landing = () => {
                 <a
                   href="#"
                   className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
+                  onClick={() => {
+                    contactMeRef.current?.scrollIntoView({
+                      behavior: "smooth",
+                    });
+                    setMenuOpen(false);
+                  }}
                 >
                   <FaPhone className="w-5 h-5" /> Contact
-                </a>
-                <a
-                  href="#"
-                  className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
-                >
-                  <FaStar className="w-5 h-5" /> Rate
                 </a>
               </div>
             </nav>
@@ -399,7 +437,12 @@ const Landing = () => {
 
         {/* hero section  */}
         {/* {isMobile ? <HeroSM /> : <HeroLG />} */}
-        <HeroLG />
+        <HeroLG
+          ref={homeRef}
+          onScroll={() =>
+            contactMeRef.current?.scrollIntoView({ behavior: "smooth" })
+          }
+        />
 
         {/* About Section */}
         <motion.section
@@ -872,12 +915,15 @@ const Landing = () => {
         </section>
 
         {/* Get in contact */}
-        <GetInTouch />
+        <GetInTouch ref={contactMeRef} />
 
         {/* Footer */}
         <Footer />
+        {/* <button onClick={() => localStorage.removeItem("hasRated")}>
+          Remove rated
+        </button> */}
         <AnimatePresence>
-          {rating && (
+          {rating && !hasRated && (
             <motion.div
               className="fixed bottom-0 z-20 w-full"
               initial={{ opacity: 0, y: 20 }}
