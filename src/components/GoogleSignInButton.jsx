@@ -3,8 +3,6 @@ import { signInWithPopup } from "firebase/auth";
 import { auth, provider } from "../config/firebaseConfig";
 import axios from "axios";
 import API_BASE_URL from "../../config";
-import { useDispatch } from "react-redux";
-import { loginSuccess } from "../redux/authSlice";
 
 const GoogleSignInButton = ({ onLoginSuccess, onClose }) => {
   const [message, setMessage] = useState("");

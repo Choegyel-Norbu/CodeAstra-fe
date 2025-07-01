@@ -54,7 +54,6 @@ export const AuthProvider = ({ children }) => {
         Boolean(authData.detailSet).toString()
       );
 
-      // Update state
       setAuthState({
         loggedIn: true,
         token: authData.token,
@@ -75,7 +74,6 @@ export const AuthProvider = ({ children }) => {
 
   const logout = () => {
     try {
-      // Clear all auth-related items
       console.log("Loggin out .....");
       setAuthState({
         loggedIn: false,

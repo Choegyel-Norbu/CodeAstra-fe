@@ -1,18 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  FaGithub,
-  FaLinkedin,
-  FaReact,
-  FaJava,
-  FaDatabase,
-  FaArrowRight,
-  FaMobile,
-} from "react-icons/fa";
+import { FaReact, FaJava, FaDatabase } from "react-icons/fa";
 import {
   FaHome,
   FaInfoCircle,
   FaPhone,
-  FaStar,
   FaSignInAlt,
   FaSignOutAlt,
 } from "react-icons/fa";
@@ -32,12 +23,7 @@ import LoginModal from "../components/LoginModal";
 import "../assets/css/custom.css";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import {
-  motion,
-  useScroll,
-  useTransform,
-  AnimatePresence,
-} from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../services/AuthProvider";
 import { useSelector } from "react-redux";
 import Footer from "../components/Footer";
@@ -46,6 +32,7 @@ import GetInTouch from "../components/GetInTouch";
 import HeroLG from "../components/hero/HeroLG";
 import HeroSM from "../components/hero/HeroSM";
 import RatingWidget from "../components/RatingWidget";
+import { Link } from "react-router-dom";
 
 const Landing = () => {
   const { loggedIn, logout } = useAuth();
@@ -288,12 +275,12 @@ const Landing = () => {
                   Contact
                 </a>
 
-                <a
-                  href="#about"
+                <Link
+                  to="/about"
                   className="text-ms font-small text-14 text-[#333333] cursor-pointer md:text-white hover:opacity-80 transition-opacity"
                 >
                   About
-                </a>
+                </Link>
               </div>
               <div className="hidden md:block  w-fit gap-4 px-6">
                 <div>
@@ -307,7 +294,9 @@ const Landing = () => {
                   )}
                   {loggedIn && (
                     <span
-                      onClick={() => logout()}
+                      onClick={() => {
+                        logout();
+                      }}
                       className="text-primary transition cursor-pointer nav-btn"
                     >
                       LogOut
@@ -359,7 +348,7 @@ const Landing = () => {
             initial="offscreen"
             animate={menuOpen ? "onscreen" : "exit"}
             exit="exit"
-            className="fixed top-18 bg-white left-0  h-screen w-[70%] sm:w-[60%] md:w-[40%] md:hidden z-50 overflow-y-auto shadow-lg"
+            className="fixed top-10 bg-white left-0  h-screen w-[70%] sm:w-[60%] md:w-[40%] md:hidden z-50 overflow-y-auto shadow-lg"
           >
             <nav className="border-b-1 border-[#cccccc] pb-5 py-5">
               <div className=" flex flex-col gap-y-2">
@@ -375,12 +364,13 @@ const Landing = () => {
                 >
                   <FaHome className="w-5 h-5" /> Home
                 </a>
-                <a
+                <Link
+                  to="/about"
                   href="#"
                   className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
                 >
                   <FaInfoCircle className="w-5 h-5" /> About
-                </a>
+                </Link>
                 <a
                   href="#"
                   className="flex items-center gap-3 px-4 py-2 rounded-lg hover:bg-gray-200 transition"
@@ -402,28 +392,25 @@ const Landing = () => {
               >
                 {loggedIn ? (
                   <>
-                    <FaSignOutAlt className="w-5 h-5" /> Logout
+                    <FaSignOutAlt className="w-5 h-5" />
+                    <span
+                      onClick={() => {
+                        onClose();
+                        logout();
+                      }}
+                      className="hover:text-cyan-600 transition cursor-pointer"
+                    >
+                      Logout
+                    </span>
                   </>
                 ) : (
                   <>
-                    <FaSignInAlt className="w-5 h-5" />{" "}
-                    <span>
-                      {!loggedIn && (
-                        <span
-                          onClick={toggleLogin}
-                          className="hover:text-cyan-600 transition cursor-pointer"
-                        >
-                          Login
-                        </span>
-                      )}
-                      {loggedIn && (
-                        <span
-                          onClick={() => logout()}
-                          className="text-primary transition cursor-pointer"
-                        >
-                          LogOut
-                        </span>
-                      )}
+                    <FaSignInAlt className="w-5 h-5" />
+                    <span
+                      onClick={toggleLogin}
+                      className="hover:text-cyan-600 transition cursor-pointer"
+                    >
+                      Login
                     </span>
                   </>
                 )}
