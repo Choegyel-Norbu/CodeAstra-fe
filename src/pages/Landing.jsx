@@ -93,7 +93,7 @@ const Landing = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setRating(true);
-    }, 1000);
+    }, 3 * 60 * 1000);
 
     return () => clearTimeout(timer);
   }, []);

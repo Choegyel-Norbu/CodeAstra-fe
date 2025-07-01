@@ -3,6 +3,8 @@ import { motion, useAnimation } from "framer-motion";
 import { useRef } from "react";
 import { useInView } from "framer-motion";
 import qoute2 from "../../assets/images/qoute2.png";
+import qoute1 from "../../assets/images/qoute1.png";
+import person from "../../assets/images/person.jpeg";
 
 const HeroLG = React.forwardRef(({ onScroll }, forwardedRef) => {
   const localRef = useRef(null);
@@ -206,7 +208,7 @@ const HeroLG = React.forwardRef(({ onScroll }, forwardedRef) => {
                   o
                 </span>
                 <img
-                  src="../../../public/images/qoute1.png"
+                  src={qoute1}
                   alt="Hero"
                   // className="hidden md:block w-[15rem] md:w-[20rem] z-1 lg:z-0 -left-5 -top-5 h-auto object-cover absolute lg:-top-25 -left-10 rounded-md"
                 />
@@ -238,7 +240,7 @@ const HeroLG = React.forwardRef(({ onScroll }, forwardedRef) => {
                   o
                 </span>
                 <img
-                  src="../../../public/images/qoute1.png"
+                  src={qoute1}
                   alt="Hero"
                   // className="hidden lg:block absolute w-[15rem] md:w-[20rem] z-2 left-40 xl:left-70 -bottom-30 h-auto object-cover  -left-10 rounded-md"
                 />
@@ -250,7 +252,7 @@ const HeroLG = React.forwardRef(({ onScroll }, forwardedRef) => {
 
             <div className="relative bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-lg rounded-2xl overflow-hidden border border-white/10 shadow-2xl">
               <img
-                src="../../../public/images/person.jpeg"
+                src={person}
                 alt="Hero"
                 className="w-full h-auto object-cover"
               />
