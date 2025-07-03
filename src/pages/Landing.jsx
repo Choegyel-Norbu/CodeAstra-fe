@@ -6,6 +6,7 @@ import {
   FaPhone,
   FaSignInAlt,
   FaSignOutAlt,
+  FaPowerOff,
 } from "react-icons/fa";
 import {
   SiFirebase,
@@ -30,9 +31,15 @@ import Footer from "../components/Footer";
 import { useInView } from "react-intersection-observer";
 import GetInTouch from "../components/GetInTouch";
 import HeroLG from "../components/hero/HeroLG";
-import HeroSM from "../components/hero/HeroSM";
 import RatingWidget from "../components/RatingWidget";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import Card from "../components/cards/SpringBootCard";
+import SpringBootCard from "../components/cards/SpringBootCard";
+import ReactCard from "../components/cards/ReactCard";
+import JavaCard from "../components/cards/JavaCard";
+import TailwindCard from "../components/cards/TailwindCard";
+import FirebaseCard from "../components/cards/FirebaseCard";
+import MySQLCard from "../components/cards/MySQL";
 
 const Landing = () => {
   const { loggedIn, logout } = useAuth();
@@ -49,6 +56,12 @@ const Landing = () => {
   const [hasRated, setHasRated] = useState(
     localStorage.getItem("hasRated") === "true"
   );
+
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
 
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   useEffect(() => {
@@ -90,7 +103,7 @@ const Landing = () => {
 
     const interval = setInterval(() => {
       setRating(true);
-    }, 10 * 60 * 1000); // 10 minutes in milliseconds
+    }, 10 * 60 * 1000);
 
     return () => clearInterval(interval);
   }, [dismissed]);
@@ -212,7 +225,7 @@ const Landing = () => {
     <>
       <div className=" relative bg-white text-black dark:text-white">
         {/* Navigation */}
-        <div className="fixed w-full z-20 bg-white md:bg-[#1a1a1a]">
+        <div className="fixed w-full z-20 bg-white md:bg-[#1a1a1a] pt-5 lg:pt-10 lg:mb-1">
           <nav className="relative py-2 px-2 md:px-8 ">
             <div className="mx-auto flex justify-between items-center">
               <div className="flex flex-row justify-center items-center">
@@ -225,42 +238,13 @@ const Landing = () => {
                   Chogyal
                 </div>
               </div>
-              <div className="flex flex-row gap-12 hidden md:flex">
+              <div className="hidden items-center gap-8 rounded-full bg-[#cccccc] px-6 py-2 md:flex">
                 <a
                   href="/"
-                  className="text-ms font-light text-14 text-[#333333] md:text-white cursor-pointer hover:opacity-80 transition-opacity"
+                  className="cursor-pointer text-14 font-light text-black transition-opacity hover:opacity-80"
                 >
                   Home
                 </a>
-
-                <div className="relative group">
-                  <a
-                    href="#"
-                    className="text-ms font-small text-14 text-[#333333] cursor-pointer md:text-white hover:opacity-80 transition-opacity"
-                  >
-                    Projects
-                  </a>
-                  <div className="absolute bottom-10 left-0 hidden group-hover:flex flex-col bg-white shadow-lg rounded-md mt-1 min-w-[180px] z-50">
-                    <a
-                      href="#java"
-                      className="px-4 text-14 py-2 hover:bg-gray-100 text-[#333333]"
-                    >
-                      Java Projects
-                    </a>
-                    <a
-                      href="#react"
-                      className="px-4 text-14 py-2 hover:bg-gray-100 text-[#333333]"
-                    >
-                      React Projects
-                    </a>
-                    <a
-                      href="#fullstack"
-                      className="px-4 py-2 text-14 hover:bg-gray-100 text-[#333333]"
-                    >
-                      Fullstack Projects
-                    </a>
-                  </div>
-                </div>
 
                 <a
                   href="#contact"
@@ -270,14 +254,14 @@ const Landing = () => {
                       behavior: "smooth",
                     });
                   }}
-                  className="text-ms font-small text-14 text-[#333333] cursor-pointer md:text-white hover:opacity-80 transition-opacity"
+                  className="cursor-pointer text-14 font-light text-black transition-opacity hover:opacity-80"
                 >
                   Contact
                 </a>
 
                 <Link
                   to="/about"
-                  className="text-ms font-small text-14 text-[#333333] cursor-pointer md:text-white hover:opacity-80 transition-opacity"
+                  className="cursor-pointer text-14 font-light text-black transition-opacity hover:opacity-80"
                 >
                   About
                 </Link>
@@ -293,14 +277,16 @@ const Landing = () => {
                     </span>
                   )}
                   {loggedIn && (
-                    <span
-                      onClick={() => {
-                        logout();
-                      }}
-                      className="text-primary transition cursor-pointer nav-btn"
-                    >
-                      LogOut
-                    </span>
+                    <div className="relative group cursor-pointer">
+                      <FaPowerOff
+                        size={24}
+                        onClick={() => logout()}
+                        className="text-white transition cursor-pointer"
+                      />
+                      <div className="absolute right-full top-1/2 -translate-y-1/2 ml-2 px-2 py-1 bg-gray-800 text-white text-sm rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        Logout
+                      </div>
+                    </div>
                   )}
                 </div>
               </div>
@@ -434,7 +420,7 @@ const Landing = () => {
         {/* About Section */}
         <motion.section
           id="about"
-          className="py-14 px-4 sm:px-8 bg-white from-gray-50 to-white"
+          className="py-14 lg:py-20 px-4 sm:px-8 bg-white from-gray-50 to-white"
           variants={fadeInUp}
           initial="offscreen"
           whileInView="onscreen"
@@ -474,12 +460,13 @@ const Landing = () => {
                     </div>
                     <div className="md:w-7/12 bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
                       <p className="text-gray-700 text-14 leading-relaxed">
-                        As a self-taught developer, I've always been fascinated
-                        by how technology can solve real-world problems. Without
-                        formal training, I've dedicated countless hours to
-                        mastering programming through online resources, building
-                        projects, and learning from the global developer
-                        community.
+                        My path into development was sparked by a deep curiosity
+                        for how things work and a passion for building
+                        solutions. As a self-taught programmer, I've immersed
+                        myself in mastering technologies through hands-on
+                        projects and continuous learning. This journey has
+                        cultivated a resilient, problem-solving mindset and a
+                        commitment to creating impactful software.
                       </p>
                     </div>
                   </div>
@@ -512,6 +499,74 @@ const Landing = () => {
           </section>
         </motion.section>
 
+        {/* Skills Section */}
+        <section id="skills" className="pt-7 lg:pt-17 w-full mx-auto">
+          <h2 className="text-3xl font-bold  text-center">Tech Stack</h2>
+          {/* Grid tried  */}
+
+          <div className="hidden md:flex flex flex-row p-4 flex-wrap justify-center gap-4">
+            <div className="w-[300px] h-[345px]">
+              <SpringBootCard />
+            </div>
+            <div className="w-[300px] h-[345px]">
+              <ReactCard />
+            </div>
+            <div className="w-[300px] h-[345px]">
+              <JavaCard />
+            </div>
+            <div className="w-[300px] h-[345px]">
+              <TailwindCard />
+            </div>
+            <div className="w-[300px] h-[345px]">
+              <FirebaseCard />
+            </div>
+            <div className="w-[300px] h-[345px]">
+              <MySQLCard />
+            </div>
+          </div>
+          <div class="lg:hidden mt-5 grid grid-cols-3 sm:grid-cols-4 gap-x-4 gap-y-8 place-items-center p-4">
+            {/* <!-- Left tall block --> */}
+            <div class="flex flex-col items-center">
+              <SiMysql className="text-5xl text-blue-600 mb-2" />
+              {/* <p className="text-12">MySQL</p>   */}
+            </div>
+
+            <div class="flex flex-col items-center">
+              <FaJava className="text-4xl text-red-600 mb-2" />
+              <span className="text-14">Java</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <SiTailwindcss className="text-4xl text-cyan-400 mb-2" />
+              <span className="text-14">Tailwind CSS</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <SiFirebase className="text-4xl text-yellow-500 mb-2" />
+              <span className="text-14">Firebase</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <FaDatabase className="text-4xl text-gray-600 mb-2" />
+              <span className="text-14">REST APIs</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <SiSpringboot className="text-4xl text-green-600 mb-2" />
+              <span className="text-14">Spring Boot</span>
+            </div>
+
+            <div class="flex flex-col items-center">
+              <FaReact className="text-4xl text-cyan-600 mb-2" />
+              <span className="text-14">React</span>
+            </div>
+            <div className="flex flex-col items-center">
+              <FaReact className="text-4xl text-cyan-600 mb-2" />
+              <span className="text-14">React Native</span>
+            </div>
+          </div>
+        </section>
+
         {/* Testimonial Section */}
 
         <motion.div
@@ -531,16 +586,16 @@ const Landing = () => {
             },
           }}
         >
-          <section className="py-16 px-6 mt-10 md:px-12 bg-[#1a1a1a] text-white">
+          {/* <section className="py-16 px-6 mt-10 md:px-12 bg-[#1a1a1a] text-white">
             <div className="max-w-4xl mx-auto text-center">
               <blockquote className="text-xl italic mb-6">
-                " Through thoughtful design and deep community insight, I
-                delivered a platform that has empowered local farmers to connect
-                directly with buyers and grow their livelihoods sustainably. "
+                "I see code as a craft and technology as a tool for empowerment.
+                My focus is on building intuitive, high-performance applications
+                that solve real problems and create lasting value."
               </blockquote>
-              <div className="font-medium">— Chogyal, Bhutan</div>
+              <div className="font-medium">— Chogyal</div>
             </div>
-          </section>
+          </section> */}
         </motion.div>
 
         {/* Projects Section */}
@@ -569,7 +624,7 @@ const Landing = () => {
                     }}
                   >
                     <p className="w-full h-[3rem] px-[0.5rem] py-[0.5rem]">
-                      Java
+                      Java Programming
                     </p>
                     <img
                       src={java}
@@ -589,7 +644,7 @@ const Landing = () => {
                     }}
                   >
                     <p className="w-full h-[3rem] px-[0.5rem] py-[0.5rem]">
-                      React
+                      DSP
                     </p>
                     <img
                       src={java}
@@ -635,24 +690,6 @@ const Landing = () => {
                   </div>
                 </div>
               </div>
-
-              {/* <div className="relative mb-10 cursor-pointer group hover:text-primary">
-                <h2>Java Project</h2>
-                <img
-                  src={java}
-                  alt="java"
-                  className="hidden md:block absolute top-0 right-[30%] opacity-0 w-100 h-100 z-10 group-hover:opacity-100 transition-opacity duration-700"
-                />
-              </div>
-
-              <div className="relative cursor-pointer group hover:text-primary">
-                <h2>React Project</h2>
-                <img
-                  src={react}
-                  alt="java"
-                  className="hidden md:block absolute top-0 right-[30%] opacity-0 w-100 h-100 z-10 group-hover:opacity-100 transition-opacity duration-700"
-                />
-              </div> */}
             </div>
           </div>
         </section>
@@ -697,203 +734,6 @@ const Landing = () => {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Skills Section */}
-        <section id="skills" className="pt-7 lg:pt-17 w-full mx-auto">
-          <h2 className="text-3xl font-bold  text-center">Tech Stack</h2>
-          {/* Grid tried  */}
-
-          <div class="lg:hidden mt-5 grid grid-cols-3 sm:grid-cols-4 gap-x-4 gap-y-8 place-items-center p-4">
-            {/* <!-- Left tall block --> */}
-            <div class="flex flex-col items-center">
-              <SiMysql className="text-5xl text-blue-600 mb-2" />
-              {/* <p className="text-12">MySQL</p>   */}
-            </div>
-
-            <div class="flex flex-col items-center">
-              <FaJava className="text-4xl text-red-600 mb-2" />
-              <span className="text-14">Java</span>
-            </div>
-
-            <div class="flex flex-col items-center">
-              <SiTailwindcss className="text-4xl text-cyan-400 mb-2" />
-              <span className="text-14">Tailwind CSS</span>
-            </div>
-
-            <div class="flex flex-col items-center">
-              <SiFirebase className="text-4xl text-yellow-500 mb-2" />
-              <span className="text-14">Firebase</span>
-            </div>
-
-            <div class="flex flex-col items-center">
-              <FaDatabase className="text-4xl text-gray-600 mb-2" />
-              <span className="text-14">REST APIs</span>
-            </div>
-
-            <div class="flex flex-col items-center">
-              <SiSpringboot className="text-4xl text-green-600 mb-2" />
-              <span className="text-14">Spring Boot</span>
-            </div>
-
-            <div class="flex flex-col items-center">
-              <FaReact className="text-4xl text-cyan-600 mb-2" />
-              <span className="text-14">React</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <FaReact className="text-4xl text-cyan-600 mb-2" />
-              <span className="text-14">React Native</span>
-            </div>
-          </div>
-
-          <div className="hidden lg:block bg-blue-300 relative h-[10rem] w-fit m-auto py-10 perspective-[1000px] flex items-center justify-center">
-            <motion.div
-              ref={ref}
-              initial={{
-                rotate: 25,
-                x: 0,
-              }}
-              animate={{
-                rotate: inView ? 0 : 0,
-                x: inView ? -450 : 0,
-              }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4"
-            >
-              {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg float-left transform rotate-40 transition"> */}
-              <FaReact className="text-4xl text-cyan-600 mb-2" />
-              <span>React</span>
-            </motion.div>
-            {/* </div> */}
-
-            <motion.div
-              ref={ref}
-              initial={{
-                rotate: 25,
-                x: 0,
-              }}
-              animate={{
-                rotate: inView ? 0 : 0,
-                x: inView ? -300 : 0,
-              }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-            >
-              <SiSpringboot className="text-4xl text-green-600 mb-2" />
-              <span>Spring Boot</span>
-            </motion.div>
-
-            <motion.div
-              ref={ref}
-              initial={{
-                rotate: 25,
-                x: 0,
-              }}
-              animate={{
-                rotate: inView ? 0 : 0,
-                x: inView ? -150 : 0, // translates to left
-              }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-            >
-              {/* <div className="absolute top-10 flex w-[10rem] h-[15rem] flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-30 transition"> */}
-              <SiFirebase className="text-4xl text-yellow-500 mb-2" />
-              <span>Firebase</span>
-              {/* </div> */}
-            </motion.div>
-
-            <motion.div
-              ref={ref}
-              initial={{
-                rotate: 0,
-                x: 0,
-              }}
-              animate={{
-                rotate: inView ? 0 : 0,
-                x: inView ? 0 : 0, // translates to left
-              }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-            >
-              {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform transition"> */}
-              <SiMysql className="text-4xl text-blue-600 mb-2" />
-              <span>MySQL</span>
-              {/* </div> */}
-            </motion.div>
-            <motion.div
-              ref={ref}
-              initial={{
-                rotate: -25,
-                x: 0,
-              }}
-              animate={{
-                rotate: inView ? 0 : 0,
-                x: inView ? 150 : 0, // translates to left
-              }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-            >
-              {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-20 transition"> */}
-              <FaJava className="text-4xl text-red-600 mb-2" />
-              <span>Java</span>
-              {/* </div> */}
-            </motion.div>
-
-            <motion.div
-              ref={ref}
-              initial={{
-                rotate: -25,
-                x: 0,
-              }}
-              animate={{
-                rotate: inView ? 0 : 0,
-                x: inView ? 300 : 0, // translates to left
-              }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-            >
-              {/* <div className="absolute top-10 flex w-[10rem] h-[15rem] flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-15 transition"> */}
-              <SiTailwindcss className="text-4xl text-cyan-400 mb-2" />
-              <span>Tailwind CSS</span>
-              {/* </div> */}
-            </motion.div>
-
-            <motion.div
-              ref={ref}
-              initial={{
-                rotate: -25,
-                x: 0,
-              }}
-              animate={{
-                rotate: inView ? 0 : 0,
-                x: inView ? -600 : 0,
-              }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 "
-            >
-              {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg transform rotate-10 transition"> */}
-              <FaDatabase className="text-4xl text-gray-600 mb-2" />
-              <span>REST APIs</span>
-              {/* </div> */}
-            </motion.div>
-            <motion.div
-              ref={ref}
-              initial={{
-                rotate: 25,
-                x: 0,
-              }}
-              animate={{
-                rotate: inView ? 0 : 0,
-                x: inView ? 450 : 0,
-              }}
-              transition={{ duration: 1, ease: "easeOut" }}
-              className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4"
-            >
-              {/* <div className="absolute top-10 w-[10rem] h-[15rem] flex flex-col items-center p-4 bg-gray-200 rounded-lg float-left transform rotate-40 transition"> */}
-              <FaReact className="text-4xl text-cyan-600 mb-2" />
-              <span>React Native</span>
-            </motion.div>
-          </div>
-        </section>
 
         {/* Get in contact */}
         <GetInTouch ref={contactMeRef} />

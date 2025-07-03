@@ -3,6 +3,12 @@ import React from "react";
 const Footer = () => {
   return (
     <footer className="h-[70vh] bg-white text-gray-700 border-t border-gray-200 mt-10">
+      {/* Decorative dots for footer */}
+      <div className="flex justify-center items-center pt-8 pb-4 bg-white dark:bg-transparent">
+        <span className="h-1 w-1 rounded-full bg-black dark:bg-gray-400 mx-1.5"></span>
+        <span className="h-1 w-1 rounded-full bg-black dark:bg-gray-400 mx-1.5"></span>
+        <span className="h-1 w-1 rounded-full bg-black dark:bg-gray-400 mx-1.5"></span>
+      </div>
       <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* Brand Section */}
         <div>
